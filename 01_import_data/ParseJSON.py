@@ -10,3 +10,15 @@ def ParseJSON(fileName=None):
 
 
    return(data)
+
+#### pass the data list and the token, get the list of the particular field back
+def ProcessID(data,token):
+
+    ID = []
+
+    for item in data:
+
+        ID.append(item[token])
+
+    return(ID)
+
