@@ -1,9 +1,6 @@
 # Switch to directory of file you wish to import
 
 import pandas as pd
-
-
-
 import ParseJSON
 
 cd './01_External/01_Yelp/'
