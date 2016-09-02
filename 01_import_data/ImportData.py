@@ -1,13 +1,8 @@
 # Switch to directory of file you wish to import
 
-import sys
 import pandas as pd
 
-# For David
-dir_list = ['D:\\Projects\\DataScienceBootcamp\\25_Project5_Capstone\\02_Selfgen',
-            'D:\\Projects\\DataScienceBootcamp\\25_Project5_Capstone\\02_Selfgen\\01_import_data',
-            'D:\\Projects\\DataScienceBootcamp\\25_Project5_Capstone\\02_Selfgen\\02_flask_app']
-sys.path.extend(dir_list)  # Add dirs to system path
+
 
 import ParseJSON
 
