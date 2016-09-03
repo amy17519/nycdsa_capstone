@@ -19,3 +19,12 @@ bus.describe()
 
 States = ProcessID(bus, 'state')
 States[0:5]
+
+Hours = ProcessID(bus, 'hours')
+
+attr = ProcessID(bus, 'attributes')
+amb = ProcessID(attr, 'Ambience')
+caters = ProcessID(attr, 'Caters')
+
+
+amb = ProcessIDDavid(attr, 'Ambience')
