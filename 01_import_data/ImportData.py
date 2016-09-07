@@ -1,4 +1,3 @@
-import pandas as pd
 from ParseJSON import *
 
 
@@ -14,6 +13,8 @@ usr = ParseJSON(fileName=dir_path+'yelp_academic_dataset_user.json')
 
 # Extract three levels deep
 attr = ProcessID(bus, 'attributes')
+type = ProcessID(bus, 'type')
+cat = ProcessID(bus, 'cat')
 amb = ProcessID(attr, 'Ambience')
 casual = ProcessID(amb, 'casual')
 
