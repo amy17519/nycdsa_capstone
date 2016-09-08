@@ -1,53 +1,75 @@
-# Extract Yelp Data through the API
-
-import io
-import json
-from yelp.client import Client
-from yelp.oauth1_authenticator import Oauth1Authenticator
-
-# read API keys
-with io.open('config_secret.json') as cred:  # Auth in file not shared on github
-    creds = json.load(cred)
-    auth = Oauth1Authenticator(**creds)
-    client = Client(auth)
-
-# There are three ways to query the Search API: search, search_by_bounding_box, and
-# search_by_coordinates. For each of these methods, additional parameters are optional.
-# The full list of parameters can be found on the Search API Documentation.
-# https://github.com/Yelp/yelp-python
-params = {
-    'term': 'food',
-    'lang': 'en'
-}
-
-# search_by_bounding_box takes a southwest latitude/longitude and a northeast
-# latitude/longitude as the location boundary
-sw_latitude, sw_longitude = 37.900000, -122.500000
-ne_latitude, ne_longitude = 37.788022, -122.399797
-response = client.search_by_bounding_box(
-    sw_latitude,
-    sw_longitude,
-    ne_latitude,
-    ne_longitude,
-    **params
-)
+# David Richard Steinmetz
+# NYCDSA - Capstone Project
 
 
-# Function to extract response locations
-def get_response_coords(resp):
+def search_yelp(secret_file, location, search_parameters):
+    # Extract Yelp Data through the API
+    import io
+    import json
+    from yelp.client import Client
+    from yelp.oauth1_authenticator import Oauth1Authenticator
+
+    # read API keys
+    with io.open(secret_file) as cred:  # Auth in file not shared on github
+        creds = json.load(cred)
+        auth = Oauth1Authenticator(**creds)
+        client = Client(auth)
+
+    # There are three ways to query the Search API: search, search_by_bounding_box, and
+    # search_by_coordinates. For each of these methods, additional parameters are optional.
+    # The full list of parameters can be found on the Search API Documentation.
+    # https://github.com/Yelp/yelp-python
+
+    # search_by_bounding_box takes a southwest latitude/longitude and a northeast
+    # latitude/longitude as the location boundary
+    response = client.search_by_bounding_box(
+        location['sw_latitude'],
+        location['sw_longitude'],
+        location['ne_latitude'],
+        location['ne_longitude'],
+        **search_parameters
+    )
+
+    return response
+
+
+# Function to extract locations of search results
+def get_response_coords(response):
     coord = []
 
-    for i in range(len(resp.businesses)):
-        latitude = resp.businesses[i].location.coordinate.latitude
-        longitude = resp.businesses[i].location.coordinate.longitude
+    for i in range(len(response.businesses)):
+        latitude = response.businesses[i].location.coordinate.latitude
+        longitude = response.businesses[i].location.coordinate.longitude
         if latitude and longitude:
             coord.append((latitude, longitude))
 
     return coord
 
-# Retrieve latitude and longitude from the response object
-get_response_coords(response)
 
+# Example use
+#
+# secret = 'yelp_secret.json'
+# Example yelp_secret.json
+# {
+#     "consumer_key": "my_key_here",
+#     "consumer_secret": "my_secret_here",
+#     "token": "my_token_here",
+#     "token_secret": "my_token_secret_here"
+# }
+#
+# gps = {'sw_latitude': 37.900000,
+#        'sw_longitude': -122.500000,
+#        'ne_latitude': 37.788022,
+#        'ne_longitude': -122.399797}
+#
+# params = {
+#     'term': 'food',
+#     'lang': 'en'
+# }
+#
+# resp = search_yelp(secret, gps, params)
+# get_response_coords(resp)
+#
 # Parse response documentation:
 # https://www.yelp.com/developers/documentation/v2/search_api
-# response.businesses[0].name
+# resp.businesses[0].name
