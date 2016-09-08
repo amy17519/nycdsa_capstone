@@ -48,7 +48,7 @@ def get_response_coords(response):
 
 # Example use
 #
-# secret = 'yelp_secret.json'
+secret = 'yelp_secret.json'
 # Example yelp_secret.json
 # {
 #     "consumer_key": "my_key_here",
@@ -57,18 +57,18 @@ def get_response_coords(response):
 #     "token_secret": "my_token_secret_here"
 # }
 #
-# gps = {'sw_latitude': 37.900000,
-#        'sw_longitude': -122.500000,
-#        'ne_latitude': 37.788022,
-#        'ne_longitude': -122.399797}
+gps = {'sw_latitude': 37.900000,
+       'sw_longitude': -122.500000,
+       'ne_latitude': 37.788022,
+       'ne_longitude': -122.399797}
+
+params = {
+    'term': 'food',
+    'lang': 'en'
+}
 #
-# params = {
-#     'term': 'food',
-#     'lang': 'en'
-# }
-#
-# resp = search_yelp(secret, gps, params)
-# get_response_coords(resp)
+resp = search_yelp(secret, gps, params)
+get_response_coords(resp)
 #
 # Parse response documentation:
 # https://www.yelp.com/developers/documentation/v2/search_api
