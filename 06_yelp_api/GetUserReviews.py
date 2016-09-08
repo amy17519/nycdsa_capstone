@@ -80,13 +80,13 @@ def parse_rss(feed):
         else:
             rev_val.append([])
 
-        lat = float(geo_lat[0].get_text())
+        lat = float(geo_lat[i].get_text())
         if lat:
             rev_lat.append(lat)
         else:
             rev_lat.append([])
 
-        lng = float(geo_long[0].get_text())
+        lng = float(geo_long[i].get_text())
         if lng:
             rev_long.append(lng)
         else:
@@ -100,9 +100,9 @@ def parse_rss(feed):
 
 
 # Example use
-# rss = get_rss_feed('yelp_login.json')
-# review_info = parse_rss(rss)
-# review_info
+rss = get_rss_feed('yelp_login.json')
+review_info = parse_rss(rss)
+review_info
 
 
 # Example yelp_login.json
