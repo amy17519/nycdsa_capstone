@@ -49,3 +49,9 @@ capstone_bucket = 'yelpcapstone'
 bucket = s3_connect(capstone_creds, capstone_bucket)
 s3_upload('ImportData.py', bucket)
 s3_delete('ImportData.py', bucket)
+
+# Example of s3_credentials.json
+# {
+#   "AWS_KEY": "DAVIDBBV6J626S6NUUVQ",
+#   "AWS_SECRET": "1mJzDFjkors3tgHqlAev5XJbkWkVe+VZobQjRcBH"
+# }
