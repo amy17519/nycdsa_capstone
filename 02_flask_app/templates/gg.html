@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <link href="{{url_for('static', filename='assets/css/bootstrap.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='assets/css/main.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='assets/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet'
+          type='text/css'>
+    <link href="{{url_for('static', filename='mdl/material.min.css')}}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://code.getmdl.io/1.2.1/material.amber-yellow.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="{{url_for('static', filename='dashgum/css/main.css')}}" rel="stylesheet">
+
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 92%;
+        width: 75%;
+        top: 67px;
+        left: 365px;
+        z-index: 999;
+        position: fixed;
+      }
+    #users {
+        background-color: #74A84D;
+        top: 65px;
+        width: 366px;
+        position: fixed;
+        z-index: 999;
+        opacity: 1;
+    }
+    #banner {
+        opacity: 0.80;
+        z-index: 999;
+        position: fixed;
+    }
+    #filter {
+        background-color: #D95D39;
+        width:366px;
+        top: 200px;
+        position: fixed;
+        z-index: 999;
+        opacity: 1;
+        text-indent: 15px;
+    }
+    #restaurants {
+        background-color: #F18805;
+        width:366px;
+        top: 400px;
+        position: fixed;
+        z-index: 999;
+        opacity: 1;
+        overflow: auto;
+    }
+    h6 {
+    display: block;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+    text-indent: 15px;
+    }
+    .content {
+    flex: 1;
+    display: flex;
+    overflow: auto;
+    }
+
+    </style>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id='banner'>
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">Yelp Nearby</span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+                <a class="mdl-navigation__link" href="https://github.com/amy17519">Amy</a>
+                <a class="mdl-navigation__link" href="">Aiko</a>
+                <a class="mdl-navigation__link" href="">David</a>
+                <a class="mdl-navigation__link" href="">Greg</a>
+            </nav>
+        </div>
+    </header>
+</div>
+
+
+<div id="map">
+
+    <script>
+     function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: {lat: -33.9, lng: 151.2}
+        });
+
+        setMarkers(map);
+      }
+
+      // Data for the markers consisting of a name, a LatLng and a zIndex for the
+      // order in which these markers should display on top of each other.
+      var beaches = [
+        ['Bondi Beach', -33.890542, 151.274856, 4],
+        ['Coogee Beach', -33.923036, 151.259052, 5],
+        ['Cronulla Beach', -34.028249, 151.157507, 3],
+        ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
+        ['Maroubra Beach', -33.950198, 151.259302, 1]
+      ];
+
+      function setMarkers(map) {
+
+        var image = {
+          url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+
+          size: new google.maps.Size(20, 32),
+
+          origin: new google.maps.Point(0, 0),
+
+          anchor: new google.maps.Point(0, 32)
+        };
+
+        var shape = {
+          coords: [1, 1, 1, 20, 18, 20, 18, 1],
+          type: 'poly'
+        };
+        for (var i = 0; i < beaches.length; i++) {
+          var beach = beaches[i];
+          var marker = new google.maps.Marker({
+            position: {lat: beach[1], lng: beach[2]},
+            map: map,
+            icon: image,
+            shape: shape,
+            title: beach[0],
+            zIndex: beach[3]
+          });
+        }
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3wIkGZBn7XWzjM5E7ECwOXonHb2HPozc&callback=initMap">
+    </script>
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3wIkGZBn7XWzjM5E7ECwOXonHb2HPozc&callback=initMap">
+    </script>
+</div>
+
+
+
+<div id="users">
+        <ul class="demo-list-icon mdl-list">
+            <li class="mdl-list__item"><span class=
+            "mdl-list__item-primary-content"><i class=
+            "material-icons mdl-list__item-icon">person</i> Amy Chen
+            {{user1}}</span></li>
+            <li class="mdl-list__item"><span class=
+            "mdl-list__item-primary-content"><i class=
+            "material-icons mdl-list__item-icon">person</i> David Steinmetz
+            {{user2}}</span></li>
+        </ul>
+</div>
+
+<div id="filter">
+
+    <table>
+            <tr>
+
+            <h6>   &nbspCuisine   </h6>
+            </tr>
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Italian</span></label></td>
+
+
+                    <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Japanese</span></label></td>
+                <td>
+                    <label class=
+                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
+                "checkbox2"><input class="mdl-checkbox__input" id="checkbox2"
+                type="checkbox"> <span class=
+                "mdl-checkbox__label">Chinese</span></label></td>
+                </tr>
+                <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Italian</span></label></td>
+
+
+                    <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Japanese</span></label></td>
+                <td>
+                    <label class=
+                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
+                "checkbox2"><input class="mdl-checkbox__input" id="checkbox2"
+                type="checkbox"> <span class=
+                "mdl-checkbox__label">Chinese</span></label></td>
+                </tr><tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Italian</span></label></td>
+
+
+                    <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Japanese</span></label></td>
+                <td>
+                    <label class=
+                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
+                "checkbox2"><input class="mdl-checkbox__input" id="checkbox2"
+                type="checkbox"> <span class=
+                "mdl-checkbox__label">Chinese</span></label></td>
+                </tr><tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Italian</span></label></td>
+
+
+                    <td><label class="mdl-checkbox mdl-js-checkbox" for=
+                "checkbox1"><input checked class="mdl-checkbox__input" id=
+                "checkbox1" type="checkbox"> <span class=
+                "mdl-checkbox__label">Japanese</span></label></td>
+                <td>
+                    <label class=
+                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
+                "checkbox2"><input class="mdl-checkbox__input" id="checkbox2"
+                type="checkbox"> <span class=
+                "mdl-checkbox__label">Chinese</span></label></td>
+                </tr>
+        </table>
+        <br>
+        <br>
+    </div>
+
+<div class="content">
+<div class="col-lg-3 ds" id="restaurants">
+        <!--COMPLETED ACTIONS DONUTS CHART-->
+        <h6>Recommendations</h6><!-- First Action -->
+        <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div><!-- Second Action -->
+        <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div><!-- Third Action -->
+        <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+    <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+    <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+    <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+</div>
+    </div>
+
+
+</body>
+
+<script src="{{url_for('static', filename='mdl/material.min.js')}}"> </script>
+<script src="{{url_for('static', filename='assets/js/modernizr.custom.js')}}"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="{{url_for('static', filename='assets/js/bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/main.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/masonry.pkgd.min.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/imagesloaded.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/classie.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/AnimOnScroll.js')}}"></script>
+
+</html>
