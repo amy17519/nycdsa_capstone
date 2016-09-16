@@ -3,6 +3,8 @@
 # NYCDSA Capstone Project
 
 # import sys
+import pandas as pd
+import numpy as np  # for test structures
 from GetYelpData import search_yelp
 
 
@@ -36,9 +38,18 @@ def get_businesses_on_map():
     resp = search_yelp(secret_file, gps, params)
 
     # ADD SECTION TO FORMAT DATA FOR KNN PREDICT
-    business_data = resp
+    business_data = [
+        {
+            'name': business.name,
+            'id': business.id,
+            'top_category': business.categories[0].alias if business.categories else '',
+            'rating': business.rating,
+            'review_count': business.review_count
+        }
+        for business in resp.businesses
+        ]
 
-    return business_data
+    return pd.DataFrame(business_data)
 
 
 # Load clusters created from Yelp challenge dataset
@@ -51,21 +62,47 @@ def load_model(file_name):
 
 
 # Assign restaurants on map to a cluster
-def get_clusters(business_data):
+def get_map_clusters(business_data):
     # from sklearn import KNeighborsClassifier  # do we need this?
     knn = load_model('knn_model.pkl')
     return knn.predict(business_data)
 
 
 # Sort businesses by cluster and rating
-def bus_sort(business_data):
-    import pandas as pd
-    business_data = pd.DataFrame(business_data)
-    business_data['cluster'] = get_clusters(business_data)
+def cluster_rating_sort(business_data):
     return business_data.sort_values(['cluster', 'rating'], ascending=[True, False])
 
 
 # Extract clusters from top model recommendations
+def get_model_clusters(model_recs):
+    unique = model_recs['cluster'].drop_duplicates()
+    if len(unique) >= 3:
+        clusters = unique[0:3]
+    else:
+        clusters = unique[0:len(unique)]
+    return clusters
 
 
 # Return map recommendations per cluster (location tuple, business attr)
+def gen_map_recs(sdata, clusters):
+    filter_by = sdata['cluster'].isin(clusters)     # T/F dataframe to filter by clusters
+    reduced = sdata[filter_by]                      # filter dataset
+    return reduced.groupby('cluster').head(2)       # extract first two business per cluster
+
+
+# BOOM
+def cluster():
+    # Test structures
+    test_biz_cluster = pd.Series(np.random.randint(1, 25, 20))
+    test_model_recs = pd.DataFrame({'cluster': np.random.randint(1, 25, 10)})
+
+    biz = get_businesses_on_map()                           # Get businesses on map
+    # biz['cluster'] = get_map_clusters(biz)                # Get clusters for biz on map
+    biz['cluster'] = test_biz_cluster                       # Get clusters for biz on map
+    sorted_biz = cluster_rating_sort(biz)                   # Sort biz by cluster and rating
+    # model_recs = load_model('graphlab_model.pkl')           # Get model recommendations
+    model_recs = test_model_recs                            # Get model recommendations
+    model_clusters = get_model_clusters(model_recs)         # Get clusters for model recs
+    map_recs = gen_map_recs(sorted_biz, model_clusters)     # Generate recs from biz on map
+
+    return map_recs
