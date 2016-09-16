@@ -3,14 +3,11 @@
 # NYCDSA Capstone Project
 
 # import sys
+import os
 import pandas as pd
-import numpy as np  # for test structures
+# os.chdir('./02_Selfgen/06_yelp_api')
 from GetYelpData import search_yelp
-
-
-# Get command line arguments
-# total = len(sys.argv)
-# args = str(sys.argv)
+# os.chdir('../10_cluster')
 
 
 # Load json file
@@ -88,21 +85,3 @@ def gen_map_recs(sdata, clusters):
     filter_by = sdata['cluster'].isin(clusters)     # T/F dataframe to filter by clusters
     reduced = sdata[filter_by]                      # filter dataset
     return reduced.groupby('cluster').head(2)       # extract first two business per cluster
-
-
-# BOOM
-def cluster():
-    # Test structures
-    test_biz_cluster = pd.Series(np.random.randint(1, 25, 20))
-    test_model_recs = pd.DataFrame({'cluster': np.random.randint(1, 25, 10)})
-
-    biz = get_businesses_on_map()                           # Get businesses on map
-    # biz['cluster'] = get_map_clusters(biz)                # Get clusters for biz on map
-    biz['cluster'] = test_biz_cluster                       # Get clusters for biz on map
-    sorted_biz = cluster_rating_sort(biz)                   # Sort biz by cluster and rating
-    # model_recs = load_model('graphlab_model.pkl')           # Get model recommendations
-    model_recs = test_model_recs                            # Get model recommendations
-    model_clusters = get_model_clusters(model_recs)         # Get clusters for model recs
-    map_recs = gen_map_recs(sorted_biz, model_clusters)     # Generate recs from biz on map
-
-    return map_recs
