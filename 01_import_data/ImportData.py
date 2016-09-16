@@ -3,6 +3,7 @@ from ParseJSON import *
 
 # Switch to directory of file you wish to import
 dir_path = './01_External/01_Yelp/'
+dir_path = '../../01_External/01_Yelp/'
 
 # Import data
 bus = ParseJSON(fileName=dir_path+'yelp_academic_dataset_business.json')

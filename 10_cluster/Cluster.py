@@ -25,16 +25,15 @@ def get_businesses_on_map(bounding_box, search_params):
     secret_file = 'yelp_secret.json'
     # map_bounding_box_file = 'map_bounding_box.json'
     # param_file = 'yelp_search_params.json'
-    map_bounding_box_file = bounding_box
-    param_file = search_params
 
     # Load bounding box and search params
     # Yelp secret data is loaded in search_yelp()
-    gps = load_json(map_bounding_box_file)
-    params = load_json(param_file)
+    # gps = load_json(map_bounding_box_file)
+    # params = load_json(param_file)
 
     # Search and return data from Yelp API
-    resp = search_yelp(secret_file, gps, params)
+    # resp = search_yelp(secret_file, gps, params)
+    resp = search_yelp(secret_file, bounding_box, search_params)
 
     # ADD SECTION TO FORMAT DATA FOR KNN PREDICT
     business_data = [
