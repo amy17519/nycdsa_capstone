@@ -46,8 +46,27 @@ def get_response_coords(response):
     return coord
 
 
+# Write JSON object to a file
+def write_resp_to_csv(resp_obj, file_name):
+    import csv
+    dicts_to_output = [
+        {
+            'name': biz.name,
+            'id': biz.id,
+            'top_category': biz.categories[0].alias if biz.categories else '',
+            'rating': biz.rating,
+            'review_count': biz.review_count
+        }
+        for biz in resp_obj.businesses
+        ]
+    csv_keys = ['name', 'id', 'top_category', 'rating', 'review_count']
+    with open(file_name, 'w') as output_file:
+        dict_writer = csv.DictWriter(output_file, csv_keys, quoting=csv.QUOTE_NONNUMERIC)
+        dict_writer.writeheader()
+        dict_writer.writerows(dicts_to_output)
+
+
 # Example use
-#
 secret = 'yelp_secret.json'
 # Example yelp_secret.json
 # {
@@ -69,7 +88,8 @@ params = {
 #
 resp = search_yelp(secret, gps, params)
 get_response_coords(resp)
-#
+write_resp_to_csv(resp, 'businesses.csv')
+
 # Parse response documentation:
 # https://www.yelp.com/developers/documentation/v2/search_api
 # resp.businesses[0].name
