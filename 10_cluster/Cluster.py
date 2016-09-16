@@ -20,11 +20,13 @@ def load_json(file_name):
 
 
 # Yelp API call based on map GPS bounding box
-def get_businesses_on_map():
+def get_businesses_on_map(bounding_box, search_params):
     # Specify parameter files
     secret_file = 'yelp_secret.json'
-    map_bounding_box_file = 'map_bounding_box.json'
-    param_file = 'yelp_search_params.json'
+    # map_bounding_box_file = 'map_bounding_box.json'
+    # param_file = 'yelp_search_params.json'
+    map_bounding_box_file = bounding_box
+    param_file = search_params
 
     # Load bounding box and search params
     # Yelp secret data is loaded in search_yelp()
