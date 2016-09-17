@@ -1,16 +1,19 @@
-from ProcessID import ProcessID
 import FitGraphLab as FG
-import pandas as pd
 
 recommender = FG.GraphLabRecommmender()
 # recommender object
 
+recommender.LoadRestaurantTypeNMap(typeFile='diningOptions.csv',mapFile='restaurants_types.csv')
+
 recommender.LoadModel(train='full',type='ranking',modelName='ranking')
 #the model loaded from /Users/Shared/yelp_data/ranking
 
-X = pd.DataFrame({'user_id': ['8J4IIYcqBlFch8T90N923A',
-                              'QXwSbE7fwXlBROW6E_FcqQ']})
-
 recommendation = recommender.Recommend(modelType='ranking',user_ids=X,k=40)
 # X is the numpy array of user_id, k is the number of items to recommend
+
+# The following calls recommend with user-chosen restaurant types
+
+recommendation = recommender.Recommend(modelType='ranking',user_ids=X,k=40,business_types=['Chinese','American (New)','Others']) #the list
+
+recommendation = recommender.Recommend(modelType='ranking',user_ids=X,k=40,business_types='Chinese') #allow 'Chinese' not within the list   
 
