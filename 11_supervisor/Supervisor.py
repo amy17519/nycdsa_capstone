@@ -33,8 +33,9 @@ def supervisor(user_id, num_rec, bounding_box, search_params):
     test_model_clusters = np.random.randint(1, 25, num_rec * len(user_id))
 
     # --- Collaborative filtering recommendations (1 + 2)
-    model_recs = gl_model(user_id, num_rec)  # Get model recommendations
     # model_recs = test_model_recs                      # Get model recommendations
+    bus_types = search_params['term'].split(',')
+    model_recs = gl_model(user_id, num_rec, business_types=bus_types)  # Get model recos
     # model_clusters = get_model_clusters(model_recs)   # Get clusters for model recs
     model_clusters = test_model_clusters  # Get clusters for model recs
     print set(model_clusters)

@@ -1,6 +1,4 @@
-import os
-
-def gl_model(user_id, num_rec):
+def gl_model(user_id, num_rec, business_types):
     import FitGraphLab as FG
 
     recommender = FG.GraphLabRecommmender()
@@ -8,19 +6,15 @@ def gl_model(user_id, num_rec):
 
     recommender.LoadRestaurantTypeNMap(typeFile='diningOptions.csv',
                                        mapFile='restaurants_types.csv',
-                                       typeDir='./scripts/')
+                                       typeDir='./scripts')
 
-    recommender.LoadModel(train='full', type='ranking', modelName='ranking',dir='./scripts/')
+    recommender.LoadModel(train='full', type='ranking', modelName='ranking', dir='./scripts')
     # the model loaded from ./ranking/
-
-    # recommendation = recommender.Recommend(modelType='ranking',
-    #                                        user_ids=user_id,
-    #                                        k=num_rec)
 
     recommendation = recommender.Recommend(modelType='ranking',
                                            user_ids=user_id,
-                                           k=40,
-                                           business_types=['Chinese', 'American (New)', 'Others'])  # the list
+                                           k=num_rec,
+                                           business_types=business_types)  # the list
 
     # user_id is the numpy array of user_id, k is the number of items to recommend
 
