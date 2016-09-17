@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
 import pandas as pd
+import json
 from scripts.Supervisor import *
 # from flask_googlemaps import GoogleMaps,Map
 
@@ -43,15 +44,16 @@ def getResult():
          'ne_longitude': ne_longitude
      }
 
-
     search_params = {
-        "terms" : "restaurant,japanese,chinese",
-        "lang": "en"
-     }
+        'term': 'burgers,chinese,japanese,mexican,seafood',
+        'lang': 'en'
+    }
 
     result = supervisor(user_id,40,bounding_box,search_params)
     print type(result)
-    return "success"
+    with open('data.txt', 'w') as outfile:
+        json.dump(result, outfile)
+    return "sucee"
 
 
 if __name__ == "__main__":

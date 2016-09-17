@@ -239,84 +239,84 @@
             <tr>
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox1">
                     <input checked class="mdl-checkbox__input" id="checkbox1" type="checkbox">
-                    <span class= "mdl-checkbox__label" id="pizza">Pizza</span>
+                    <span class= "mdl-checkbox__label" id="checkboxlabel1">Pizza</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox2">
                     <input checked class="mdl-checkbox__input" id="checkbox2" type="checkbox">
-                    <span class="mdl-checkbox__label" id="mexican">Mexcian</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel2">Mexcian</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox3">
                     <input checked class="mdl-checkbox__input" id="checkbox3" type="checkbox">
-                    <span class="mdl-checkbox__label" id="american">American</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel3">American</span>
                 </label></td>
             </tr>
 
             <tr>
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox4">
                     <input checked class="mdl-checkbox__input" id="checkbox4" type="checkbox">
-                    <span class="mdl-checkbox__label" id="italian">Italian</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel4">Italian</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox5">
                     <input checked class="mdl-checkbox__input" id="checkbox5" type="checkbox">
-                    <span class="mdl-checkbox__label" id="burgers">Burgers</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel5">Burgers</span>
                 </label></td>
                 <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox6">
                     <input checked class="mdl-checkbox__input" id="checkbox6" type="checkbox">
-                    <span class="mdl-checkbox__label" id="chinese">Chinese</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel6">Chinese</span>
                 </label></td>
             </tr>
 
             <tr>
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox7">
                     <input checked class="mdl-checkbox__input" id="checkbox7" type="checkbox">
-                    <span class="mdl-checkbox__label" id="japanese">Japanese</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel7">Japanese</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox8">
                     <input checked class="mdl-checkbox__input" id="checkbox8" type="checkbox">
-                    <span class="mdl-checkbox__label" id="sushi">Sushi</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel8">Sushi</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox9">
                     <input checked class="mdl-checkbox__input" id="checkbox9" type="checkbox">
-                    <span class="mdl-checkbox__label" id="seafood">Seafood</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel9">Seafood</span>
                 </label></td>
             </tr>
 
             <tr>
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox10">
                     <input checked class="mdl-checkbox__input" id="checkbox10" type="checkbox">
-                    <span class="mdl-checkbox__label" id="steakhouses">Steakhouses</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel10">Steakhouses</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox11">
                     <input checked class="mdl-checkbox__input" id="checkbox11" type="checkbox">
-                    <span class="mdl-checkbox__label" id="thai">Thai</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel11">Thai</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox12">
                     <input checked class="mdl-checkbox__input" id="checkbox12" type="checkbox">
-                    <span class="mdl-checkbox__label" id="french">French</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel12">French</span>
                 </label></td>
             </tr>
 
             <tr>
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox13">
                     <input checked class="mdl-checkbox__input" id="checkbox13" type="checkbox">
-                    <span class="mdl-checkbox__label" id="indian">Indian</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel13">Indian</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox14">
                     <input checked class="mdl-checkbox__input" id="checkbox14" type="checkbox">
-                    <span class="mdl-checkbox__label" id="greek">Greek</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel14">Greek</span>
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox15">
                     <input checked class="mdl-checkbox__input" id="checkbox15" type="checkbox">
-                    <span class="mdl-checkbox__label" id="others">Others</span>
+                    <span class="mdl-checkbox__label" id="checkboxlabel15">Others</span>
                 </label></td>
             </tr>
         </table><br>
@@ -334,7 +334,7 @@
         <h6>Recommendations</h6><!-- First Action -->
         <div class="desc">
             <div class="details">
-                <a href="#"> fff </a>
+                <a href="#"> {obj} </a>
                  848 52th St<br></p>
             </div>
         </div><!-- Second Action -->
@@ -393,28 +393,44 @@
     $(function() {
         $("#yelpnearby").on('click', function(event) {
 
-        $.ajax({
-            url: 'http://127.0.0.1:5000/model',
-            data: {
-            user1: $('#user1').text(),
-            user2: $('#user2').text(),
-            sw_latitude: bounds['f']['b'],
-            sw_longitude: bounds['b']['b'],
-            ne_latitude: bounds['f']['f'],
-            ne_longitude: bounds['b']['f'],
-            checkbox1: $('#checkbox1').text()
+            var currentCheckbox;
+            var currentCheckboxLabel;
+            var checkboxLabels = [];
+            var checkboxCheckedStatus = [];
 
-        },
-            type: 'POST',
-            crossDomain: true,
-            success: function(data) {
-                console.log(data);
-            },
-
-            error: function() {
-                console.log("notworking");
+            for ( var checkboxIndex = 0; checkboxIndex < 15; checkboxIndex++ ) {
+                currentCheckbox = document.getElementById('checkbox' + (checkboxIndex + 1) ).checked;
+                console.log('currentCheckbox', currentCheckbox);
+                if (currentCheckbox == true){
+                    currentCheckboxLabel = document.getElementById('checkboxlabel' + (checkboxIndex + 1) ).innerHTML;
+                    checkboxLabels.push(currentCheckboxLabel);
+                    // checkboxCheckedStatus.push(currentCheckbox);
+                }
             }
-        });
+
+            console.log('currentCheckbox', checkboxLabels);
+
+            $.ajax({
+                url: 'http://127.0.0.1:5000/model',
+                data: {
+                user1: $('#user1').text(),
+                user2: $('#user2').text(),
+                sw_latitude: bounds['f']['b'],
+                sw_longitude: bounds['b']['b'],
+                ne_latitude: bounds['f']['f'],
+                ne_longitude: bounds['b']['f'],
+            },
+                type: 'POST',
+                crossDomain: true,
+                success: function(data) {
+                    //obj = JSON.parse(data);
+                    //console.log(obj[0].cluster);
+                },
+
+                error: function() {
+                    console.log("notworking");
+                }
+            });
      });
 });
 
