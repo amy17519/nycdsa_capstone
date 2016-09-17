@@ -1,23 +1,32 @@
 import graphlab, os
 import pandas as pd
-import numpy as np
-import ParseJSON
+import numpy  as np
+import string
+from ParseJSON import ParseJSON
+from ParseJSON import ProcessID
 from collections import defaultdict
 
 class GraphLabRecommmender(object):
 
-      def __init__(self,mode='recommend'):
+      def __init__(self,mode='recommend',eliteModelChoices={'build':False,'use':False}):
 
+          self.mode = mode
+          self.eliteModelChoices = eliteModelChoices
           if mode not in ['recommend', 'training']: raise ValueError('Bad mode %s' %(mode))
 
           if mode == 'training':
+
               self.userDF,self.reviewDF,self.businessDF = ConstructUserBusinessReviewDF()
-              self.userSF     = graphlab.SFrame(self.userDF)
-              self.businessSF = graphlab.SFrame(self.businessDF)
+              self.userSF            = graphlab.SFrame(self.userDF)
+              self.businessSF        = graphlab.SFrame(self.businessDF)
               self.total_review_data = graphlab.SFrame(self.reviewDF) 
+              if self.eliteModelChoices['build']: self.ComputeEliteData()
+              self.BuildTrainTestSamples()
+
           self.model_performance = dict()
           self.full_model        = dict()
           self.trained_model     = dict()
+          self.elite_model       = dict()
          
           self.model_parameters  = dict()
           self.model_parameters['ranking']       = dict()
@@ -26,14 +35,31 @@ class GraphLabRecommmender(object):
           self.model_parameters['ranking']['regularization'] = 0.1 
           self.model_parameters['ranking']['linear_regularization'] = 0.1  
           self.model_parameters['ranking']['max_iterations'] = 50   
-          self.model_parameters['ranking']['size_data_factorization'] = False  
+          self.model_parameters['ranking']['side_data_factorization'] = False  
           self.model_parameters['factorization']['num_factors'] = 50
           self.model_parameters['factorization']['regularization'] = 1
           self.model_parameters['factorization']['linear_regularization'] = 1
           self.model_parameters['factorization']['max_iterations'] = 100
-          self.model_parameters['factorization']['size_data_factorization'] = True
+          self.model_parameters['factorization']['side_data_factorization'] = True
 
           self.elite_business_id = None
+          self.diningOptions     = None
+          self.restaurant_types  = None
+
+      def LoadRestaurantTypeNMap(self,typeFile,mapFile,typeDir=None):
+
+          if typeDir is None: typeDir = os.getcwd()
+          self.diningOptions    = pd.read_csv(typeDir+"/"+typeFile)
+          self.restaurant_types = pd.read_csv(typeDir+"/"+mapFile)
+
+
+      def ComputeEliteData(self):
+
+          if self.userDF is None:  raise ValueError("userDF must exist to compute Elite Data")
+          self.elites_id      = self.userDF.loc[self.userDF['elite_year']>0,['user_id']]
+          self.elite_data     = graphlab.SFrame(self.reviewDF.loc[self.reviewDF['user_id'].isin(self.elites_id['user_id']),:])
+          self.elite_userSF   = graphlab.SFrame(self.elites_id.merge(self.userDF,on='user_id',how='left'))
+
 
       def ComputeEliteBusinessIDs(self):
 
@@ -43,7 +69,7 @@ class GraphLabRecommmender(object):
 
       def BuildTrainTestSamples(self):
 
-          samples = np.array(np.random.randint(0,2,size=self.userDF.shape[0]),dtype=bool)
+          samples = np.array(np.random.randint(0,2,size=self.reviewDF.shape[0]),dtype=bool)
           self.trainDF = self.reviewDF.loc[samples,:]
           self.testDF  = self.reviewDF.loc[~samples,:]
           self.train_data = graphlab.SFrame(self.trainDF)
@@ -57,17 +83,20 @@ class GraphLabRecommmender(object):
           lambda_2    = params['regularization']
           lambda_1    = params['linear_regularization']
           max_iterations = params['max_iterations']
-          size_data_factorization = params['size_data_factorization']
-          train_data = self.train_data if train=='train' else self.total_review_data
+          side_data_factorization = params['side_data_factorization']
+          userSF = self.elite_userSF if train=='elite' else self.userSF
+          train_data = self.train_data if train=='train' else (self.total_review_data if train=='full' else self.elite_data)
           item_fac_model = graphlab.factorization_recommender.create(train_data, user_id='user_id', item_id='business_id', \
-                      user_data=self.userSF,item_data=self.businessSF,target='stars',num_factors=num_factors,\
+                      user_data=userSF,item_data=self.businessSF,target='stars',num_factors=num_factors,\
                       regularization=lambda_2,linear_regularization=lambda_1, max_iterations=max_iterations,\
-                      size_data_factorization=size_data_factorization)
+                      side_data_factorization=side_data_factorization)
 
           if train=='train':
                  self.trained_model['factorization'] = item_fac_model 
           elif train=='full':
                  self.full_model['factorization']    = item_fac_model
+          elif train=='elite':
+                 self.elite_model['factorization']   = item_fac_model
           else:  raise ValueError("Bad train token")
 
 
@@ -78,34 +107,34 @@ class GraphLabRecommmender(object):
           lambda_2    = params['regularization']
           lambda_1    = params['linear_regularization']
           max_iterations = params['max_iterations']
-          size_data_factorization = params['size_data_factorization']
-          train_data  = self.train_data if train=='train' else self.total_review_data
+          side_data_factorization = params['side_data_factorization']
+          userSF      = self.elite_userSF if train=='elite' else self.userSF
+          train_data  = self.train_data if train=='train' else (self.total_review_data if train=='full' else self.elite_data)
           item_rank_model = graphlab.ranking_factorization_recommender.create(train_data, user_id='user_id', item_id='business_id',\
-                     user_data=self.userSF,item_data=self.businessSF,num_factors=num_factors,regularization=lambda_2,\
-                     linear_regularization=lambda_1, side_data_factorization=False,max_iterations=max_iterations)
+                     user_data=userSF,item_data=self.businessSF,num_factors=num_factors,regularization=lambda_2,\
+                     linear_regularization=lambda_1, side_data_factorization=side_data_factorization,max_iterations=max_iterations)
 
           if train=='train':
                  self.trained_model['ranking'] = item_rank_model
           elif train=='full':
                  self.full_model['ranking']    = item_rank_model
+          elif train=='elite':
+                 self.elite_model['ranking']   = item_rank_model
           else: raise ValueError("Bad train token")
-
-
       
-      def TestModelPrecision(self,modelType='ranking'):
-
-          if modelType=='ranking': 
-               self.model_performance['ranking']       = graphlab.compare(self.test_data, [self.item_rank_model])
-          elif modelType=='factorization': 
-               self.model_performance['factorization'] = graphlab.compare(self.test_data, [self.item_fac_model])
-          else:  raise ValueError("Invalid modelType " + modelType)
-
       def TrainFullModel(self,modelType):
 
           if modelType == 'factorization': self.TrainFactorizationModel(train='full')
           elif modelType == 'ranking':     self.TrainRankingModel(train='full')
           else: raise ValueError("bad modelType choice")
 
+
+      def GradePerformance(self,modelType='factorization'):
+
+          if modelType not in ['factorization','ranking']: raise ValueError("Not a valid modelType")
+          model  = self.trained_model[modelType]
+          self.model_performance[modelType] = graphlab.compare(self.test_data, [model])
+          
 
       def SaveRankingModel(self,train, modelName):
           
@@ -118,7 +147,7 @@ class GraphLabRecommmender(object):
       def SaveModel(self, train, type, modelName):
 
           cwd = os.getcwd()
-          if train not in ['train','full']: raise ValueError("train is not valid")
+          if train not in ['train','full','elite']: raise ValueError("train is not valid")
           if modelName not in ['ranking','factorization']: raise ValueError("bad modelName")
 
           myModelName = cwd+"/"+modelName
@@ -131,6 +160,10 @@ class GraphLabRecommmender(object):
               self.full_model['ranking'].save(myModelName)
           elif (train,modelName)==('full','factorization'):
               self.full_model['factorization'].save(myModelName)
+          elif (train,modelName)==('elite','ranking'):
+              self.elite_model['ranking'].save(myModelName)
+          elif (train,modelName)==('elite','factorization'):
+              self.elite_model['factorization'].save(myModelName)
  
           print("The model %s has been saved to %s" %(modelName,myModelName))         
  
@@ -142,29 +175,50 @@ class GraphLabRecommmender(object):
           
           myModel = graphlab.load_model(myModelName)
 
-          if train not in ['train','full']: raise ValueError("train is not valid")
+          if train not in ['train','full','elite']: raise ValueError("train is not valid")
           if modelName not in ['ranking','factorization']: raise ValueError("bad modelName")
 
           if (train,modelName)==('train','ranking'):
-              self.trained_model['ranking'] = myModel
+              self.trained_model['ranking']       = myModel
           elif (train,modelName)==('train','factorization'):
               self.trained_model['factorization'] = myModel
           elif (train,modelName)==('full','ranking'):
-              self.full_model['ranking'] = myModel
+              self.full_model['ranking']          = myModel
           elif (train,modelName)==('full','factorization'):
-              self.full_model['factorization'] = myModel
+              self.full_model['factorization']    = myModel
+          elif (train,modelName)==('elite','ranking'):
+              self.elite_model['ranking']         = myModel
+          elif (train,modelName)==('elite','factorization'):
+              self.elite_model['factorization']   = myModel
 
           print("the model loaded from %s" %(myModelName))
 
-      def Recommend(self, modelType, user_ids, eliteSpecial=False, k=60, business_categories=None,location=None):
+      
+      def FindRestaurantsOf(self, business_types=None):
+
+           if business_types is None or self.diningOptions is None or self.restaurant_types is None: return(None)
+           if isinstance(business_types, str): business_types = [string.capwords(business_types,sep=' (')]
+           else: business_types = [string.capwords(t,sep=' (') for t in business_types]
+           if len(set(business_types)-set(self.diningOptions['Option']))>0: raise ValueError("business_type goes beyond the allowable range!")
+
+           myTypes = self.restaurant_types 
+           ans = myTypes.loc[myTypes['diningOption'].isin(business_types),'business_id']
+           if ans.shape[0] < 1: 
+                     print("No such restaurants in our dataset")
+                     return(None)
+           else:   return(graphlab.SArray(ans))
+
+
+      def Recommend(self, modelType, user_ids, k=60, business_types=None, location=None, eliteSpecial = False):
  
            myModel = self.full_model[modelType]
            users   = pd.DataFrame(user_ids)
            users.columns = ['user_id']
+           items   = self.FindRestaurantsOf(business_types=business_types)
 
            if not eliteSpecial:
                   userSF  = graphlab.SFrame(users)
-                  recommended  = myModel.recommend(userSF,k=k).to_dataframe()
+                  recommended  = myModel.recommend(userSF,k=k,items=items).to_dataframe()
            else:
                   X = users.merge(self.userDF.loc[:,['user_id','elite_year']], on = 'user_id',how='left')
                   non_elites = np.array(X.loc[X['elite_year']==0,'user_id'])
@@ -173,9 +227,10 @@ class GraphLabRecommmender(object):
                        recommended_common = myModel.recommend(non_elites,k=k).to_dataframe()
                   else: recommended_common = None
                   if elites.shape[0]>0:
-                       self.ComputeEliteBusinessIDs()
-                       recommended_elite  = myModel.recommend(elites,k=k,items=graphlab.SFrame(self.elite_business_id)).to_dataframe()
-     
+                       if not self.eliteModelChoices['use']:
+                              self.ComputeEliteBusinessIDs()
+                              recommended_elite  = myModel.recommend(elites,k=k,items=graphlab.SFrame(self.elite_business_id)).to_dataframe()
+                       else: recommended_elite = self.elite_model[modelType].recommend(elites,k=k).to_dataframe()
                   if recommended_common is not None: 
                                 recommended = recommended_common
                                 if recommended_elite is not None: recommended = recommended.append(recommended_elite)
@@ -229,7 +284,22 @@ def LoadBusiness():
 
     # add number of check-ins to business attribute
 
-    businessDF3 = businessDF3.ix[:,['business_id','categories','review_count','stars','city','state','checkin_Num']]
+    businessDF3['log_review_count'] = np.log(businessDF3['review_count']+1.0)
+    businessDF3.drop('review_count',axis=1,inplace=True)
+
+    attributes  = businessDF3['attributes']
+
+    price_range = [myDict.get('Price Range') for myDict in attributes]
+    price_range = [t if t is not None else 3 for t in price_range]
+    businessDF3['price_range'] = price_range
+
+    outdoor     = [myDict.get('Outdoor Seating') for myDict in attributes]
+    outdoor     = [t if t is not None else 0 for t in outdoor]
+    businessDF3['hasOutdoor']  = outdoor
+
+    
+
+    businessDF3 = businessDF3.ix[:,['business_id','log_review_count','stars','city','state','checkin_Num']]
 
     return(businessDF3,business_id)
 
@@ -249,8 +319,14 @@ def LoadUserNReview(business_id):
 
 
     userDF  = pd.DataFrame(users)
-    userDF2 = userDF.loc[:,['user_id','average_stars','review_count','useful']]
+    useful  = [t.get('useful') for t in userDF['votes']]
+    useful  = [t if t is not None else 0 for t in useful]
+    userDF['useful']  = useful
+    userDF['log_review_count'] = np.log(userDF['review_count']+1.0)
+    #userDF.drop('review_count',axis=1,inplace=True)
+    userDF2 = userDF.loc[:,['user_id', 'average_stars', 'review_count', 'useful']]
     userDF2['useful_ratio'] = userDF2['useful']/(userDF2['review_count']+2.0)
+    userDF2.drop('review_count',axis=1,inplace=True)
 
     # compute the ratio of 'useful' to review count
 
@@ -266,7 +342,7 @@ def LoadUserNReview(business_id):
     elites = ProcessID(users,'elite')
     elites = [list(map(lambda z:str(z),t)) for t in elites]
 
-    userDF3=userDF3.loc[:,['user_id','review_count','stars']]
+    userDF3=userDF3.loc[:,['user_id','log_review_count','stars','useful_ratio']]
 
     userDF3['elites'] = np.array(elites)
     userDF3['elite_year'] = np.array([len(t) for t in elites])
@@ -312,7 +388,7 @@ def AppendCityState(userDF, reviewDF, businessDF):
 
     X = pd.DataFrame(myCities.keys())
     X.columns = ['user_id']
-    X['city'] = map(lambda x: list(set(x)),list(myCities.values()))
+    #X['city'] = map(lambda x: list(set(x)),list(myCities.values()))
     X['state']= map(lambda x: list(set(x)),list(myStates.values()))
     userDF    = userDF.merge(X,on='user_id',how='left')
     

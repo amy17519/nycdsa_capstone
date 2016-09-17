@@ -8,9 +8,9 @@ def gl_model(user_id, num_rec):
 
     recommender.LoadRestaurantTypeNMap(typeFile='diningOptions.csv',
                                        mapFile='restaurants_types.csv',
-                                       typeDir='./')
+                                       typeDir='./scripts/')
 
-    recommender.LoadModel(train='full', type='ranking', modelName='ranking')
+    recommender.LoadModel(train='full', type='ranking', modelName='ranking',dir='./scripts/')
     # the model loaded from ./ranking/
 
     # recommendation = recommender.Recommend(modelType='ranking',
