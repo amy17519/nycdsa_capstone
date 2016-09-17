@@ -12,7 +12,7 @@
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
     <link href='https://code.getmdl.io/1.2.1/material.amber-yellow.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="{{url_for('static', filename='dashgum/css/main.css')}}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <style>
       html, body {
@@ -77,6 +77,8 @@
     }
 
     </style>
+
+
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id='banner'>
@@ -102,6 +104,7 @@
 
     <script>
     var map;
+    var bounds;
     var tem = [{
         featureType: 'all',
         stylers: [{
@@ -159,7 +162,7 @@
                 });
                 setMarkers(map);
                 google.maps.event.addListener(map, 'idle', function(event) {
-                    var bounds = map.getBounds();
+                    bounds = map.getBounds();
                     console.log(bounds);})
             })
         };
@@ -186,7 +189,6 @@
                 content: info
             });
             google.maps.event.addListener(marker, 'click', function () {
-                infoWindow.close();
                 infoWindow.open(map, marker);
             });
         }
@@ -204,133 +206,151 @@
 </div>
 
 
-
 <div id="users">
+
+
+
         <ul class="demo-list-icon mdl-list">
-            <li class="mdl-list__item"><span class=
-            "mdl-list__item-primary-content"><i class=
-            "material-icons mdl-list__item-icon">person</i> Amy Chen
-            {{user1}}</span></li>
-            <li class="mdl-list__item"><span class=
-            "mdl-list__item-primary-content"><i class=
-            "material-icons mdl-list__item-icon">person</i> David Steinmetz
-            {{user2}}</span></li>
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class= "material-icons mdl-list__item-icon">person</i>
+                    <span>Amy Chen&nbsp&nbsp </span>
+                    <span id="user1">{{user1}}</span>
+                </span>
+            </li>
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class= "material-icons mdl-list__item-icon">person</i>
+                    <span>David Steinmetz&nbsp&nbsp </span>
+                    <span id="user2">{{user2}}</span>
+                </span>
+            </li>
         </ul>
 </div>
 
 <div id="filter">
-        <h6>&nbspCuisine&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-  Yelp my nearby!
-</button> </h6>
-
+        <h6>&nbspCuisine&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="yelpnearby">Yelp nearby!</button> </h6>
         <table>
             <tr>
                 <td></td>
             </tr>
             <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox1"><input checked class="mdl-checkbox__input" id=
-                "checkbox1" type="checkbox"> <span class=
-                "mdl-checkbox__label">Italian</span></label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox2"><input checked class="mdl-checkbox__input" id=
-                "checkbox2" type="checkbox"> <span class=
-                "mdl-checkbox__label">Japanese</span></label></td>
-                <td><label class=
-                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
-                "checkbox3"><input checked class="mdl-checkbox__input" id="checkbox3"
-                type="checkbox"> <span class=
-                "mdl-checkbox__label">Chinese</span></label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox1">
+                    <input checked class="mdl-checkbox__input" id="checkbox1" type="checkbox">
+                    <span class= "mdl-checkbox__label" id="checkbox1">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox2">
+                    <input checked class="mdl-checkbox__input" id="checkbox2" type="checkbox">
+                    <span class="mdl-checkbox__label">Japanese</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox3">
+                    <input checked class="mdl-checkbox__input" id="checkbox3" type="checkbox">
+                    <span class="mdl-checkbox__label">Chinese</span>
+                </label></td>
             </tr>
+
             <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox4"><input checked class="mdl-checkbox__input" id=
-                "checkbox4" type="checkbox"> <span class=
-                "mdl-checkbox__label">German</span></label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox5"><input checked class="mdl-checkbox__input" id=
-                "checkbox5" type="checkbox"> <span class=
-                "mdl-checkbox__label">Japanese</span></label></td>
-                <td><label class=
-                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
-                "checkbox6"><input checked class="mdl-checkbox__input" id="checkbox6"
-                type="checkbox"> <span class=
-                "mdl-checkbox__label">Fastfood</span></label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox4">
+                    <input checked class="mdl-checkbox__input" id="checkbox4" type="checkbox">
+                    <span class="mdl-checkbox__label">German</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox5">
+                    <input checked class="mdl-checkbox__input" id="checkbox5" type="checkbox">
+                    <span class="mdl-checkbox__label">Japanese</span>
+                </label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox6">
+                    <input checked class="mdl-checkbox__input" id="checkbox6" type="checkbox">
+                    <span class="mdl-checkbox__label">Fastfood</span>
+                </label></td>
             </tr>
+
             <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox7"><input checked class="mdl-checkbox__input" id=
-                "checkbox7" type="checkbox"> <span class=
-                "mdl-checkbox__label">Italian</span></label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox8"><input checked class="mdl-checkbox__input" id=
-                "checkbox8" type="checkbox"> <span class=
-                "mdl-checkbox__label">Japanese</span></label></td>
-                <td><label class=
-                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
-                "checkbox9"><input checked class="mdl-checkbox__input" id="checkbox9"
-                type="checkbox"> <span class=
-                "mdl-checkbox__label">Chinese</span></label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox7">
+                    <input checked class="mdl-checkbox__input" id="checkbox7" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox8">
+                    <input checked class="mdl-checkbox__input" id="checkbox8" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox9">
+                    <input checked class="mdl-checkbox__input" id="checkbox9" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
             </tr>
+
             <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox10"><input checked class="mdl-checkbox__input" id=
-                "checkbox10" type="checkbox"> <span class=
-                "mdl-checkbox__label">Italian</span></label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox11"><input checked class="mdl-checkbox__input" id=
-                "checkbox11" type="checkbox"> <span class=
-                "mdl-checkbox__label">Japanese</span></label></td>
-                <td><label class=
-                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
-                "checkbox12"><input checked class="mdl-checkbox__input" id="checkbox12"
-                type="checkbox"> <span class=
-                "mdl-checkbox__label">Chinese</span></label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox10">
+                    <input checked class="mdl-checkbox__input" id="checkbox10" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox11">
+                    <input checked class="mdl-checkbox__input" id="checkbox11" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox12">
+                    <input checked class="mdl-checkbox__input" id="checkbox12" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
             </tr>
+
             <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox13"><input checked class="mdl-checkbox__input" id=
-                "checkbox13" type="checkbox"> <span class=
-                "mdl-checkbox__label">Italian</span></label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox14"><input checked class="mdl-checkbox__input" id=
-                "checkbox14" type="checkbox"> <span class=
-                "mdl-checkbox__label">Japanese</span></label></td>
-                <td><label class=
-                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
-                "checkbox15"><input checked class="mdl-checkbox__input" id="checkbox15"
-                type="checkbox"> <span class=
-                "mdl-checkbox__label">Chinese</span></label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox13">
+                    <input checked class="mdl-checkbox__input" id="checkbox13" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox14">
+                    <input checked class="mdl-checkbox__input" id="checkbox14" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox15">
+                    <input checked class="mdl-checkbox__input" id="checkbox15" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
             </tr>
+
             <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox16"><input checked class="mdl-checkbox__input" id=
-                "checkbox16" type="checkbox"> <span class=
-                "mdl-checkbox__label">Italian</span></label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox17"><input checked class="mdl-checkbox__input" id=
-                "checkbox17" type="checkbox"> <span class=
-                "mdl-checkbox__label">Japanese</span></label></td>
-                <td><label class=
-                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
-                "checkbox18"><input checked class="mdl-checkbox__input" id="checkbox18"
-                type="checkbox"> <span class=
-                "mdl-checkbox__label">Chinese</span></label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox16">
+                    <input checked class="mdl-checkbox__input" id="checkbox16" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox17">
+                    <input checked class="mdl-checkbox__input" id="checkbox17" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox18">
+                    <input checked class="mdl-checkbox__input" id="checkbox18" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
             </tr>
+
             <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox19"><input checked class="mdl-checkbox__input" id=
-                "checkbox19" type="checkbox"> <span class=
-                "mdl-checkbox__label">Italian</span></label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for=
-                "checkbox20"><input checked class="mdl-checkbox__input" id=
-                "checkbox20" type="checkbox"> <span class=
-                "mdl-checkbox__label">Japanese</span></label></td>
-                <td><label class=
-                "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for=
-                "checkbox21"><input checked class="mdl-checkbox__input" id="checkbox21"
-                type="checkbox"> <span class=
-                "mdl-checkbox__label">Chinese</span></label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox19">
+                    <input checked class="mdl-checkbox__input" id="checkbox19" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox20">
+                    <input checked class="mdl-checkbox__input" id="checkbox20" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox21">
+                    <input checked class="mdl-checkbox__input" id="checkbox21" type="checkbox">
+                    <span class="mdl-checkbox__label">Italian</span>
+                </label></td>
             </tr>
         </table><br>
 
@@ -339,12 +359,17 @@
 
 <div class="content">
 <div class="col-lg-3 ds" id="restaurants">
+
+
+
+
+
+
         <!--COMPLETED ACTIONS DONUTS CHART-->
         <h6>Recommendations</h6><!-- First Action -->
         <div class="desc">
             <div class="details">
-                <a href="#">Chef Yu</a>
-                <p>Chinese<br>
+                <a href="#"> fff </a>
                  848 52th St<br></p>
             </div>
         </div><!-- Second Action -->
@@ -398,5 +423,36 @@
 <script src="{{url_for('static', filename='assets/js/imagesloaded.js')}}"></script>
 <script src="{{url_for('static', filename='assets/js/classie.js')}}"></script>
 <script src="{{url_for('static', filename='assets/js/AnimOnScroll.js')}}"></script>
+<script type='text/javascript'>
+    $("#yelpnearby").on('click', function(event) {
+        <!--bounds = map.getBounds();-->
+        <!--console.log(bounds['f']['f']);-->
+        console.log($('#user1').text());
+        console.log($('#user2').text());
+        $.ajax({
+            url: 'http://127.0.0.1:5000/model',
+            data: {
+            user1: $('#user1').text(),
+            user2: $('#user2').text(),
+            sw_latitude: bounds['f']['b'],
+            sw_longitude: bounds['b']['b'],
+            ne_latitude: bounds['f']['f'],
+            ne_longitude: bounds['b']['f'],
+            checkbox1: $('#checkbox1').text()
+        },
+            type: 'POST',
+            crossDomain: true,
+            success: function(data) {
+                console.log(data);
+            },
+
+            error: function() {
+                console.log("notworking");
+            }
+        });
+    })
+</script>
 
 </html>
+
+
