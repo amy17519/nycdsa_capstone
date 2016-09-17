@@ -27,7 +27,7 @@ def mapview():
 def getResult():
     user1_row_num = int(request.form.get('user1'))
     user2_row_num = int(request.form.get('user2'))
-    user1_id =  user_ids['user_id'][user1_row_num]
+    user1_id = user_ids['user_id'][user1_row_num]
     user2_id = user_ids['user_id'][user2_row_num]
     user_id = [user1_id, user2_id]
     print 'here'
