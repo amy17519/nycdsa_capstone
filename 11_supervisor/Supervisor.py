@@ -28,15 +28,15 @@ search_params = {
 def supervisor(user_id, num_rec, bounding_box, search_params):
     # --- Test structures
     np.random.seed(26)
-    test_biz_cluster = pd.Series(np.random.randint(1, 25, num_rec*len(user_id)))
+    test_biz_cluster = pd.Series(np.random.randint(1, 25, num_rec * len(user_id)))
     # test_model_recs = pd.DataFrame({'cluster': np.random.randint(1, 25, 10)})
-    test_model_clusters = np.random.randint(1, 25, num_rec*len(user_id))
+    test_model_clusters = np.random.randint(1, 25, num_rec * len(user_id))
 
     # --- Collaborative filtering recommendations (1 + 2)
-    model_recs = gl_model(user_id, num_rec)             # Get model recommendations
+    model_recs = gl_model(user_id, num_rec)  # Get model recommendations
     # model_recs = test_model_recs                      # Get model recommendations
     # model_clusters = get_model_clusters(model_recs)   # Get clusters for model recs
-    model_clusters = test_model_clusters                # Get clusters for model recs
+    model_clusters = test_model_clusters  # Get clusters for model recs
     print set(model_clusters)
 
     # --- Classify and sort (3 + 4 + 5)
@@ -58,3 +58,9 @@ search_params = {
     'term': 'burgers,restaurant,chinese,japanese,mexican,seafood',
     'lang': 'en'
 }
+
+import pandas as pd
+
+test = pd.DataFrame({'user_id': ['58dk4j6934j', '98gk4j6324j'],
+                     'reviews': [564, 341]})
+test.to_json()
