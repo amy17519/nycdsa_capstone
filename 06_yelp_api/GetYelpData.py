@@ -66,29 +66,29 @@ def write_resp_to_csv(resp_obj, file_name):
         dict_writer.writerows(dicts_to_output)
 
 
-# Example use
-secret = 'yelp_secret.json'
-# Example yelp_secret.json
-# {
-#     "consumer_key": "my_key_here",
-#     "consumer_secret": "my_secret_here",
-#     "token": "my_token_here",
-#     "token_secret": "my_token_secret_here"
+# # Example use
+# secret = 'yelp_secret.json'
+# # Example yelp_secret.json
+# # {
+# #     "consumer_key": "my_key_here",
+# #     "consumer_secret": "my_secret_here",
+# #     "token": "my_token_here",
+# #     "token_secret": "my_token_secret_here"
+# # }
+# #
+# gps = {'sw_latitude': 37.900000,
+#        'sw_longitude': -122.500000,
+#        'ne_latitude': 37.788022,
+#        'ne_longitude': -122.399797}
+#
+# params = {
+#     'term': 'food',
+#     'lang': 'en'
 # }
-#
-gps = {'sw_latitude': 37.900000,
-       'sw_longitude': -122.500000,
-       'ne_latitude': 37.788022,
-       'ne_longitude': -122.399797}
-
-params = {
-    'term': 'food',
-    'lang': 'en'
-}
-#
-resp = search_yelp(secret, gps, params)
-get_response_coords(resp)
-write_resp_to_csv(resp, 'businesses.csv')
+# #
+# resp = search_yelp(secret, gps, params)
+# get_response_coords(resp)
+# write_resp_to_csv(resp, 'businesses.csv')
 
 # Parse response documentation:
 # https://www.yelp.com/developers/documentation/v2/search_api

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <link href="{{url_for('static', filename='assets/css/bootstrap.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='assets/css/main.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='assets/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet'
+          type='text/css'>
+    <link href="{{url_for('static', filename='mdl/material.min.css')}}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://code.getmdl.io/1.2.1/material.amber-yellow.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 92%;
+        width: 75%;
+        top: 67px;
+        left: 365px;
+        z-index: 999;
+        position: fixed;
+      }
+    #users {
+        background-color: #74A84D;
+        top: 65px;
+        width: 366px;
+        position: fixed;
+        z-index: 999;
+        opacity: 1;
+    }
+    #banner {
+        opacity: 0.80;
+        z-index: 999;
+        position: fixed;
+    }
+    #filter {
+        background-color: #D95D39;
+        width:366px;
+        top: 200px;
+        position: fixed;
+        z-index: 999;
+        opacity: 1;
+        text-indent: 13px;
+    }
+    #restaurants {
+        background-color: #F18805;
+        width:366px;
+        top: 480px;
+        position: fixed;
+        z-index: 999;
+        opacity: 1;
+        overflow: auto;
+    }
+    h6 {
+    display: block;
+    font-family: "Arial", Courier, monospace;
+    font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+    text-indent: 15px;
+    }
+    .content {
+    flex: 1;
+    display: flex;
+    overflow: auto;
+    }
+
+    </style>
+
+
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id='banner'>
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">Yelp Nearby</span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+                <a class="mdl-navigation__link" href="https://github.com/amy17519">Amy</a>
+                <a class="mdl-navigation__link" href="">Aiko</a>
+                <a class="mdl-navigation__link" href="">David</a>
+                <a class="mdl-navigation__link" href="">Greg</a>
+            </nav>
+        </div>
+    </header>
+</div>
+
+
+<div id="map">
+
+    <script>
+    var map;
+    var bounds;
+    var tem = [{
+        featureType: 'all',
+        stylers: [{
+            saturation: -80
+        }]
+    }, {
+        featureType: 'road.arterial',
+        elementType: 'geometry',
+        stylers: [{
+            hue: '#00ffee'
+        }, {
+            saturation: 50
+        }]
+    }, {
+        featureType: 'poi.business',
+        elementType: 'labels',
+        stylers: [{
+            visibility: 'off'
+        }]
+    }];
+    var restaurants = [
+     [40.7559501870753, -74.4107041507959],
+     [40.9031154, -74.4076702],
+     [40.8809432983398, -74.3819046020508],
+     [40.723937714264, -74.306469376626],
+     [40.8622684502874, -74.4962810991364],
+     [40.79662, -74.481992],
+     [40.6221855, -74.4457526],
+     [40.8588989669258, -74.3589119830252],
+     [40.646815, -74.399289],
+     [40.68273, -74.44516],
+     [40.8579857, -74.3520475],
+     [40.6517633427513, -74.3247372827576],
+     [40.82325, -74.4185],
+     [40.6844885741496, -74.1073497064864],
+     [40.6527253109552, -74.3307454884052],
+     [40.5742224156025, -74.3244423284531],
+     [40.7404861450195, -74.3826751708984],
+     [40.69717, -74.40494],
+     [40.828575, -74.479576],
+     [40.8337736874819, -74.2480885237455]
+      ];
+
+    function initMap() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: pos,
+                    zoom: 12,
+                    styles: tem
+                });
+                setMarkers(map);
+                google.maps.event.addListener(map, 'idle', function(event) {
+                    bounds = map.getBounds();
+                    console.log(bounds);})
+            })
+        };
+    }
+
+      var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      var labelIndex = 0;
+
+     function setMarkers(map) {
+        for (var i = 0; i < restaurants.length; i++) {
+          var restaurant = restaurants[i];
+          var marker = new google.maps.Marker({
+            position: {lat: restaurant[0], lng: restaurant[1]},
+            map: map,
+            clickable: true,
+            label: labels[labelIndex++ % labels.length]
+          });
+          addInfoWindow(marker, restaurant[0].toString());
+        }
+      }
+
+      function addInfoWindow(marker, info) {
+            var infoWindow = new google.maps.InfoWindow({
+                content: info
+            });
+            google.maps.event.addListener(marker, 'click', function () {
+                infoWindow.open(map, marker);
+            });
+        }
+
+       function clearMarkers() {
+        setMapOnAll(null);
+      }
+
+
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3wIkGZBn7XWzjM5E7ECwOXonHb2HPozc&callback=initMap">
+    </script>
+</div>
+
+
+<div id="users">
+
+
+
+        <ul class="demo-list-icon mdl-list">
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class= "material-icons mdl-list__item-icon">person</i>
+                    <span>Amy Chen&nbsp&nbsp </span>
+                    <span id="user1">{{user1}}</span>
+                </span>
+            </li>
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class= "material-icons mdl-list__item-icon">person</i>
+                    <span>David Steinmetz&nbsp&nbsp </span>
+                    <span id="user2">{{user2}}</span>
+                </span>
+            </li>
+        </ul>
+</div>
+
+
+<div id="filter">
+        <h6>&nbspCuisine&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="yelpnearby">Yelp nearby!</button> </h6>
+        <table class="checkedfilters">
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox1">
+                    <input checked class="mdl-checkbox__input" id="checkbox1" type="checkbox">
+                    <span class= "mdl-checkbox__label" id="pizza">Pizza</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox2">
+                    <input checked class="mdl-checkbox__input" id="checkbox2" type="checkbox">
+                    <span class="mdl-checkbox__label" id="mexican">Mexcian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox3">
+                    <input checked class="mdl-checkbox__input" id="checkbox3" type="checkbox">
+                    <span class="mdl-checkbox__label" id="american">American</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox4">
+                    <input checked class="mdl-checkbox__input" id="checkbox4" type="checkbox">
+                    <span class="mdl-checkbox__label" id="italian">Italian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox5">
+                    <input checked class="mdl-checkbox__input" id="checkbox5" type="checkbox">
+                    <span class="mdl-checkbox__label" id="burgers">Burgers</span>
+                </label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox6">
+                    <input checked class="mdl-checkbox__input" id="checkbox6" type="checkbox">
+                    <span class="mdl-checkbox__label" id="chinese">Chinese</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox7">
+                    <input checked class="mdl-checkbox__input" id="checkbox7" type="checkbox">
+                    <span class="mdl-checkbox__label" id="japanese">Japanese</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox8">
+                    <input checked class="mdl-checkbox__input" id="checkbox8" type="checkbox">
+                    <span class="mdl-checkbox__label" id="sushi">Sushi</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox9">
+                    <input checked class="mdl-checkbox__input" id="checkbox9" type="checkbox">
+                    <span class="mdl-checkbox__label" id="seafood">Seafood</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox10">
+                    <input checked class="mdl-checkbox__input" id="checkbox10" type="checkbox">
+                    <span class="mdl-checkbox__label" id="steakhouses">Steakhouses</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox11">
+                    <input checked class="mdl-checkbox__input" id="checkbox11" type="checkbox">
+                    <span class="mdl-checkbox__label" id="thai">Thai</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox12">
+                    <input checked class="mdl-checkbox__input" id="checkbox12" type="checkbox">
+                    <span class="mdl-checkbox__label" id="french">French</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox13">
+                    <input checked class="mdl-checkbox__input" id="checkbox13" type="checkbox">
+                    <span class="mdl-checkbox__label" id="indian">Indian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox14">
+                    <input checked class="mdl-checkbox__input" id="checkbox14" type="checkbox">
+                    <span class="mdl-checkbox__label" id="greek">Greek</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox15">
+                    <input checked class="mdl-checkbox__input" id="checkbox15" type="checkbox">
+                    <span class="mdl-checkbox__label" id="others">Others</span>
+                </label></td>
+            </tr>
+        </table><br>
+        <br>
+    </div>
+
+
+
+
+
+
+<div class="content">
+<div class="col-lg-3 ds" id="restaurants">
+        <!--COMPLETED ACTIONS DONUTS CHART-->
+        <h6>Recommendations</h6><!-- First Action -->
+        <div class="desc">
+            <div class="details">
+                <a href="#"> fff </a>
+                 848 52th St<br></p>
+            </div>
+        </div><!-- Second Action -->
+        <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div><!-- Third Action -->
+        <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+    <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+    <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+    <div class="desc">
+            <div class="details">
+                <a href="#">Chef Yu</a>
+                <p>Chinese<br>
+                 848 52th St<br></p>
+            </div>
+        </div>
+</div>
+    </div>
+
+
+</body>
+
+<script src="{{url_for('static', filename='mdl/material.min.js')}}"> </script>
+<script src="{{url_for('static', filename='assets/js/modernizr.custom.js')}}"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="{{url_for('static', filename='assets/js/bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/main.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/masonry.pkgd.min.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/imagesloaded.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/classie.js')}}"></script>
+<script src="{{url_for('static', filename='assets/js/AnimOnScroll.js')}}"></script>
+<script type='text/javascript'>
+
+    $(function() {
+        $("#yelpnearby").on('click', function(event) {
+
+        $.ajax({
+            url: 'http://127.0.0.1:5000/model',
+            data: {
+            user1: $('#user1').text(),
+            user2: $('#user2').text(),
+            sw_latitude: bounds['f']['b'],
+            sw_longitude: bounds['b']['b'],
+            ne_latitude: bounds['f']['f'],
+            ne_longitude: bounds['b']['f'],
+            checkbox1: $('#checkbox1').text()
+
+        },
+            type: 'POST',
+            crossDomain: true,
+            success: function(data) {
+                console.log(data);
+            },
+
+            error: function() {
+                console.log("notworking");
+            }
+        });
+     });
+});
+
+
+</script>
+
+</html>
+
+
