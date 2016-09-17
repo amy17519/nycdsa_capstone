@@ -5,8 +5,10 @@
 # import sys
 import os
 import pandas as pd
+os.chdir('C:\\Users\\root\\Projects\\DataScienceBootcamp\\25_Project5_Capstone\\02_Selfgen\\06_yelp_api')
 # os.chdir('./02_Selfgen/06_yelp_api')
 from GetYelpData import search_yelp
+os.chdir('C:\\Users\\root\\Projects\\DataScienceBootcamp\\25_Project5_Capstone\\02_Selfgen\\10_cluster')
 # os.chdir('../10_cluster')
 
 
@@ -40,9 +42,13 @@ def get_businesses_on_map(bounding_box, search_params):
         {
             'name': business.name,
             'id': business.id,
-            'top_category': business.categories[0].alias if business.categories else '',
+            'url': business.url,
             'rating': business.rating,
-            'review_count': business.review_count
+            'top_category': business.categories[0].alias if business.categories else '',
+            'display_phone': business.display_phone,
+            'display_address': business.location.display_address,
+            'latitude': business.location.coordinate.latitude,
+            'longitude': business.location.coordinate.longitude
         }
         for business in resp.businesses
         ]
@@ -86,3 +92,4 @@ def gen_map_recs(sdata, clusters):
     filter_by = sdata['cluster'].isin(clusters)     # T/F dataframe to filter by clusters
     reduced = sdata[filter_by]                      # filter dataset
     return reduced.groupby('cluster').head(2)       # extract first two business per cluster
+    # return sdata
