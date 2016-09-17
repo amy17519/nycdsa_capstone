@@ -51,16 +51,16 @@ def supervisor(user_id, num_rec, bounding_box, search_params):
     return map_recs
 
 
-# Test supervisor function
-supervisor(user_id, num_rec, bounding_box, search_params)
-
-search_params = {
-    'term': 'burgers,restaurant,chinese,japanese,mexican,seafood',
-    'lang': 'en'
-}
-
-import pandas as pd
-
-test = pd.DataFrame({'user_id': ['58dk4j6934j', '98gk4j6324j'],
-                     'reviews': [564, 341]})
-test.to_json()
+# # Test supervisor function
+# supervisor(user_id, num_rec, bounding_box, search_params)
+#
+# search_params = {
+#     'term': 'burgers,restaurant,chinese,japanese,mexican,seafood',
+#     'lang': 'en'
+# }
+#
+# import pandas as pd
+#
+# test = pd.DataFrame({'user_id': ['58dk4j6934j', '98gk4j6324j'],
+#                      'reviews': [564, 341]})
+# test.to_json()

@@ -13,16 +13,16 @@ from Cluster import *
 from GLModel import gl_model
 import numpy as np
 
-user_id = ['8J4IIYcqBlFch8T90N923A', 'QXwSbE7fwXlBROW6E_FcqQ']
-num_rec = 40
-bounding_box = {'sw_latitude': 37.900000,
-                'sw_longitude': -122.500000,
-                'ne_latitude': 37.788022,
-                'ne_longitude': -122.399797}
-search_params = {
-    'term': 'food',
-    'lang': 'en'
-}
+# user_id = ['8J4IIYcqBlFch8T90N923A', 'QXwSbE7fwXlBROW6E_FcqQ']
+# num_rec = 40
+# bounding_box = {'sw_latitude': 37.900000,
+#                 'sw_longitude': -122.500000,
+#                 'ne_latitude': 37.788022,
+#                 'ne_longitude': -122.399797}
+# search_params = {
+#     'term': 'food',
+#     'lang': 'en'
+# }
 
 
 def supervisor(user_id, num_rec, bounding_box, search_params):
