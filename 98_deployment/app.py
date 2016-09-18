@@ -31,7 +31,7 @@ def getResult():
     user1_id = user_ids['user_id'][user1_row_num]
     user2_id = user_ids['user_id'][user2_row_num]
     user_id = [user1_id, user2_id]
-    print 'here'
+    print user_id
 
     sw_latitude = request.form.get('sw_latitude')
     sw_longitude = request.form.get('sw_longitude')
@@ -43,17 +43,22 @@ def getResult():
          'ne_latitude': ne_latitude,
          'ne_longitude': ne_longitude
      }
+    print bounding_box
 
+    FoodType = str(request.form.get('FoodType'))
+    print type(FoodType)
+    print FoodType
     search_params = {
-        'term': 'burgers,chinese,japanese,mexican,seafood',
+        'term': FoodType,
         'lang': 'en'
     }
+    print search_params
 
-    result = supervisor(user_id,40,bounding_box,search_params)
-    print type(result)
+    result = supervisor(user_id,20,bounding_box,search_params)
+    print result
     with open('data.txt', 'w') as outfile:
         json.dump(result, outfile)
-    return "sucee"
+    return result
 
 
 if __name__ == "__main__":

@@ -3,16 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0">
-    <link href="{{url_for('static', filename='assets/css/bootstrap.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='assets/css/main.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='assets/css/font-awesome.min.css')}}" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet'
-          type='text/css'>
-    <link href="{{url_for('static', filename='mdl/material.min.css')}}" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
-    <link href='https://code.getmdl.io/1.2.1/material.amber-yellow.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.amber-orange.min.css">
+    <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+
 
     <style>
       html, body {
@@ -29,12 +24,11 @@
         position: fixed;
       }
     #users {
-        background-color: #74A84D;
-        top: 65px;
-        width: 366px;
-        position: fixed;
+        <!--background-color: #74A84D;-->
+        top: 100px;
         z-index: 999;
-        opacity: 1;
+        position: fixed;
+        <!--opacity: 1;-->
     }
     #banner {
         opacity: 0.80;
@@ -57,11 +51,12 @@
         position: fixed;
         z-index: 999;
         opacity: 1;
-        overflow: auto;
+        overflow-y: scroll;
+        max-height: 300px;
     }
     h6 {
     display: block;
-    font-family: "Arial", Courier, monospace;
+    <!--font-family: "Arial", Courier, monospace;-->
     font-size: 1.5em;
     margin-top: 0.83em;
     margin-bottom: 0.83em;
@@ -70,17 +65,18 @@
     font-weight: bold;
     text-indent: 15px;
     }
-    .content {
-    flex: 1;
-    display: flex;
-    overflow: auto;
-    }
+    <!--.content {-->
+    <!--flex: 1;-->
+    <!--display: flex;-->
+    <!--overflow: auto;-->
+    <!--}-->
 
     </style>
 
 
 </head>
 <body>
+
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id='banner'>
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
@@ -97,6 +93,303 @@
             </nav>
         </div>
     </header>
+</div>
+
+
+
+
+
+<div id="users">
+        <ul class="demo-list-icon mdl-list">
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class= "material-icons mdl-list__item-icon">person</i>
+                    <span>Amy Chen&nbsp&nbsp </span>
+                    <span id="user1">{{user1}}</span>
+                </span>
+            </li>
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class= "material-icons mdl-list__item-icon">person</i>
+                    <span>David Steinmetz&nbsp&nbsp </span>
+                    <span id="user2">{{user2}}</span>
+            </li>
+        </ul>
+</div>
+
+
+<div id="filter">
+        <h6>&nbspCuisine&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="yelpnearby">Yelp nearby!</button> </h6>
+        <table>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox1">
+                    <input checked class="mdl-checkbox__input" id="checkbox1" type="checkbox">
+                    <span class= "mdl-checkbox__label" id="checkboxlabel1">Pizza</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox2">
+                    <input checked class="mdl-checkbox__input" id="checkbox2" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel2">Mexican</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox3">
+                    <input checked class="mdl-checkbox__input" id="checkbox3" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel3">American (New)</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox4">
+                    <input class="mdl-checkbox__input" id="checkbox4" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel4">American (Traditional)</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox5">
+                    <input class="mdl-checkbox__input" id="checkbox5" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel5">Italian</span>
+                </label></td>
+                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox6">
+                    <input class="mdl-checkbox__input" id="checkbox6" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel6">Burgers</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox7">
+                    <input class="mdl-checkbox__input" id="checkbox7" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel7">Chinese</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox8">
+                    <input class="mdl-checkbox__input" id="checkbox8" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel8">Japanese</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox9">
+                    <input class="mdl-checkbox__input" id="checkbox9" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel9">Sushi Bars</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox10">
+                    <input class="mdl-checkbox__input" id="checkbox10" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel10">Seafood</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox11">
+                    <input class="mdl-checkbox__input" id="checkbox11" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel11">Steakhouses</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox12">
+                    <input class="mdl-checkbox__input" id="checkbox12" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel12">Thai</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox13">
+                    <input class="mdl-checkbox__input" id="checkbox13" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel13">French</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox14">
+                    <input class="mdl-checkbox__input" id="checkbox14" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel14">Indian</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox15">
+                    <input class="mdl-checkbox__input" id="checkbox15" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel15">Greek</span>
+                </label></td>
+            </tr>
+
+            <tr>
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox16">
+                    <input class="mdl-checkbox__input" id="checkbox16" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel16">Vietnamese</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox17">
+                    <input class="mdl-checkbox__input" id="checkbox17" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel17">Tex-Mex</span>
+                </label></td>
+
+                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox18">
+                    <input class="mdl-checkbox__input" id="checkbox18" type="checkbox">
+                    <span class="mdl-checkbox__label" id="checkboxlabel18">Others</span>
+                </label></td>
+            </tr>
+
+        </table><br>
+        <br>
+    </div>
+
+
+<div id="restaurants">
+        <ul class="demo-list-three mdl-list">
+  <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons mdl-list__item-avatar">person</i>
+      <span>Bryan Cranston</span>
+      <span class="mdl-list__item-text-body">
+        Bryan Cranston played the role of Walter in Breaking Bad. He is also known
+        for playing Hal in Malcom in the Middle.
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+  <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Aaron Paul</span>
+      <span class="mdl-list__item-text-body">
+        Aaron Paul played the role of Jesse in Breaking Bad. He also featured in
+        the "Need For Speed" Movie.
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+  <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">person</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+    <li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons  mdl-list__item-avatar">restaurant</i>
+      <span>Bob Odenkirk</span>
+      <span class="mdl-list__item-text-body">
+        Bob Odinkrik played the role of Saul in Breaking Bad. Due to public fondness for the
+        character, Bob stars in his own show now, called "Better Call Saul".
+      </span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+  </li>
+</ul>
 </div>
 
 
@@ -125,28 +418,6 @@
             visibility: 'off'
         }]
     }];
-    var restaurants = [
-     [40.7559501870753, -74.4107041507959],
-     [40.9031154, -74.4076702],
-     [40.8809432983398, -74.3819046020508],
-     [40.723937714264, -74.306469376626],
-     [40.8622684502874, -74.4962810991364],
-     [40.79662, -74.481992],
-     [40.6221855, -74.4457526],
-     [40.8588989669258, -74.3589119830252],
-     [40.646815, -74.399289],
-     [40.68273, -74.44516],
-     [40.8579857, -74.3520475],
-     [40.6517633427513, -74.3247372827576],
-     [40.82325, -74.4185],
-     [40.6844885741496, -74.1073497064864],
-     [40.6527253109552, -74.3307454884052],
-     [40.5742224156025, -74.3244423284531],
-     [40.7404861450195, -74.3826751708984],
-     [40.69717, -74.40494],
-     [40.828575, -74.479576],
-     [40.8337736874819, -74.2480885237455]
-      ];
 
     function initMap() {
         if (navigator.geolocation) {
@@ -180,7 +451,7 @@
             clickable: true,
             label: labels[labelIndex++ % labels.length]
           });
-          addInfoWindow(marker, restaurant[0].toString());
+          addInfoWindow(marker, restaurants[i][2].toString());
         }
       }
 
@@ -193,10 +464,6 @@
             });
         }
 
-       function clearMarkers() {
-        setMapOnAll(null);
-      }
-
 
 
     </script>
@@ -206,232 +473,105 @@
 </div>
 
 
-<div id="users">
 
 
 
-        <ul class="demo-list-icon mdl-list">
-            <li class="mdl-list__item">
-                <span class="mdl-list__item-primary-content">
-                    <i class= "material-icons mdl-list__item-icon">person</i>
-                    <span>Amy Chen&nbsp&nbsp </span>
-                    <span id="user1">{{user1}}</span>
-                </span>
-            </li>
-            <li class="mdl-list__item">
-                <span class="mdl-list__item-primary-content">
-                    <i class= "material-icons mdl-list__item-icon">person</i>
-                    <span>David Steinmetz&nbsp&nbsp </span>
-                    <span id="user2">{{user2}}</span>
-                </span>
-            </li>
-        </ul>
-</div>
-
-
-<div id="filter">
-        <h6>&nbspCuisine&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="yelpnearby">Yelp nearby!</button> </h6>
-        <table class="checkedfilters">
-            <tr>
-                <td></td>
-            </tr>
-            <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox1">
-                    <input checked class="mdl-checkbox__input" id="checkbox1" type="checkbox">
-                    <span class= "mdl-checkbox__label" id="checkboxlabel1">Pizza</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox2">
-                    <input checked class="mdl-checkbox__input" id="checkbox2" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel2">Mexcian</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox3">
-                    <input checked class="mdl-checkbox__input" id="checkbox3" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel3">American</span>
-                </label></td>
-            </tr>
-
-            <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox4">
-                    <input checked class="mdl-checkbox__input" id="checkbox4" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel4">Italian</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox5">
-                    <input checked class="mdl-checkbox__input" id="checkbox5" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel5">Burgers</span>
-                </label></td>
-                <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox6">
-                    <input checked class="mdl-checkbox__input" id="checkbox6" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel6">Chinese</span>
-                </label></td>
-            </tr>
-
-            <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox7">
-                    <input checked class="mdl-checkbox__input" id="checkbox7" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel7">Japanese</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox8">
-                    <input checked class="mdl-checkbox__input" id="checkbox8" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel8">Sushi</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox9">
-                    <input checked class="mdl-checkbox__input" id="checkbox9" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel9">Seafood</span>
-                </label></td>
-            </tr>
-
-            <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox10">
-                    <input checked class="mdl-checkbox__input" id="checkbox10" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel10">Steakhouses</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox11">
-                    <input checked class="mdl-checkbox__input" id="checkbox11" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel11">Thai</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox12">
-                    <input checked class="mdl-checkbox__input" id="checkbox12" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel12">French</span>
-                </label></td>
-            </tr>
-
-            <tr>
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox13">
-                    <input checked class="mdl-checkbox__input" id="checkbox13" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel13">Indian</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox14">
-                    <input checked class="mdl-checkbox__input" id="checkbox14" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel14">Greek</span>
-                </label></td>
-
-                <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox15">
-                    <input checked class="mdl-checkbox__input" id="checkbox15" type="checkbox">
-                    <span class="mdl-checkbox__label" id="checkboxlabel15">Others</span>
-                </label></td>
-            </tr>
-        </table><br>
-        <br>
-    </div>
-
-
-
-
-
-
-<div class="content">
-<div class="col-lg-3 ds" id="restaurants">
-        <!--COMPLETED ACTIONS DONUTS CHART-->
-        <h6>Recommendations</h6><!-- First Action -->
-        <div class="desc">
-            <div class="details">
-                <a href="#"> {obj} </a>
-                 848 52th St<br></p>
-            </div>
-        </div><!-- Second Action -->
-        <div class="desc">
-            <div class="details">
-                <a href="#">Chef Yu</a>
-                <p>Chinese<br>
-                 848 52th St<br></p>
-            </div>
-        </div><!-- Third Action -->
-        <div class="desc">
-            <div class="details">
-                <a href="#">Chef Yu</a>
-                <p>Chinese<br>
-                 848 52th St<br></p>
-            </div>
-        </div>
-    <div class="desc">
-            <div class="details">
-                <a href="#">Chef Yu</a>
-                <p>Chinese<br>
-                 848 52th St<br></p>
-            </div>
-        </div>
-    <div class="desc">
-            <div class="details">
-                <a href="#">Chef Yu</a>
-                <p>Chinese<br>
-                 848 52th St<br></p>
-            </div>
-        </div>
-    <div class="desc">
-            <div class="details">
-                <a href="#">Chef Yu</a>
-                <p>Chinese<br>
-                 848 52th St<br></p>
-            </div>
-        </div>
-</div>
-    </div>
 
 
 </body>
 
-<script src="{{url_for('static', filename='mdl/material.min.js')}}"> </script>
-<script src="{{url_for('static', filename='assets/js/modernizr.custom.js')}}"></script>
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="{{url_for('static', filename='assets/js/bootstrap.min.js')}}"></script>
-<script src="{{url_for('static', filename='assets/js/main.js')}}"></script>
-<script src="{{url_for('static', filename='assets/js/masonry.pkgd.min.js')}}"></script>
-<script src="{{url_for('static', filename='assets/js/imagesloaded.js')}}"></script>
-<script src="{{url_for('static', filename='assets/js/classie.js')}}"></script>
-<script src="{{url_for('static', filename='assets/js/AnimOnScroll.js')}}"></script>
+<!--<script src="{{url_for('static', filename='mdl/material.min.js')}}"> </script>-->
 <script type='text/javascript'>
-
-    $(function() {
-        $("#yelpnearby").on('click', function(event) {
-
-            var currentCheckbox;
-            var currentCheckboxLabel;
-            var checkboxLabels = [];
-            var checkboxCheckedStatus = [];
-
-            for ( var checkboxIndex = 0; checkboxIndex < 15; checkboxIndex++ ) {
-                currentCheckbox = document.getElementById('checkbox' + (checkboxIndex + 1) ).checked;
-                console.log('currentCheckbox', currentCheckbox);
-                if (currentCheckbox == true){
-                    currentCheckboxLabel = document.getElementById('checkboxlabel' + (checkboxIndex + 1) ).innerHTML;
-                    checkboxLabels.push(currentCheckboxLabel);
-                    // checkboxCheckedStatus.push(currentCheckbox);
-                }
+$(function() {
+    $("#yelpnearby").on('click', function(event) {
+        var currentCheckbox;
+        var currentCheckboxLabel;
+        var checkboxLabels = [];
+        var checkboxCheckedStatus = [];
+        for (var checkboxIndex = 0; checkboxIndex < 18; checkboxIndex++) {
+            currentCheckbox = document.getElementById(
+                'checkbox' + (checkboxIndex + 1)).checked;
+            console.log('currentCheckbox', currentCheckbox);
+            if (currentCheckbox == true) {
+                currentCheckboxLabel = document.getElementById(
+                    'checkboxlabel' + (checkboxIndex + 1)).innerHTML;
+                checkboxLabels.push(currentCheckboxLabel);
             }
+        }
+        console.log('currentCheckbox', checkboxLabels);
+        FoodType = checkboxLabels.join(",");
 
-            console.log('currentCheckbox', checkboxLabels);
-
-            $.ajax({
-                url: 'http://127.0.0.1:5000/model',
-                data: {
+        $.ajax({
+            url: 'http://127.0.0.1:5000/model',
+            data: {
                 user1: $('#user1').text(),
                 user2: $('#user2').text(),
                 sw_latitude: bounds['f']['b'],
                 sw_longitude: bounds['b']['b'],
                 ne_latitude: bounds['f']['f'],
                 ne_longitude: bounds['b']['f'],
+                FoodType: FoodType
             },
-                type: 'POST',
-                crossDomain: true,
-                success: function(data) {
-                    //obj = JSON.parse(data);
-                    //console.log(obj[0].cluster);
-                },
-
-                error: function() {
-                    console.log("notworking");
+            type: 'POST',
+            crossDomain: true,
+            success: function(data) {
+                parsed = JSON.parse(data);
+                var infoKeys = Object.keys(parsed).map(
+                    function(k) {
+                        return parsed[k]
+                    });
+                xxx = infoKeys
+                var address = Object.keys(infoKeys[
+                    0]).map(function(k) {
+                    return infoKeys[0][k]
+                });
+                var phone = Object.keys(infoKeys[1])
+                    .map(function(k) {
+                        return infoKeys[1][k]
+                    });
+                var category = Object.keys(infoKeys[7])
+                    .map(function(k) {
+                    return infoKeys[7][k]
+                });
+                var lat = Object.keys(infoKeys[3]).map(
+                    function(k) {
+                        return infoKeys[3][k]
+                    });
+                var lng = Object.keys(infoKeys[4]).map(
+                    function(k) {
+                        return infoKeys[4][k]
+                    });
+                var name = Object.keys(infoKeys[5]).map(
+                    function(k) {
+                        return infoKeys[5][k]
+                    });
+                var rating = Object.keys(infoKeys[6]).map(
+                    function(k) {
+                        return infoKeys[6][k]
+                    });
+                var web = Object.keys(infoKeys[8]).map(
+                    function(k) {
+                        return infoKeys[8][k]
+                    });
+                restaurants = [];
+                for (var loc = 0; loc < lat.length; loc++) {
+                    var temp = [lat[loc], lng[loc],
+                        address[loc], phone[loc],
+                        category[loc], name[loc],
+                        rating[loc],web[loc]
+                    ];
+                    restaurants.push(temp)
                 }
-            });
-     });
+                console.log(restaurants[1]);
+                <!--document.getElementById('test').innerHTML =-->
+                    <!--restaurants[1][2][2];-->
+                initMap();
+            },
+            error: function() {
+                console.log("notworking");
+            }
+        });
+    });
 });
 
 
