@@ -2,8 +2,13 @@ from ParseJSON import *
 
 
 # Switch to directory of file you wish to import
+import os
+os.getcwd()
 dir_path = './01_External/01_Yelp/'
+dir_path = '../01_External/01_Yelp/'
 dir_path = '../../01_External/01_Yelp/'
+os.chdir(dir_path)
+
 
 # Import data
 bus = ParseJSON(fileName=dir_path+'yelp_academic_dataset_business.json')
@@ -18,4 +23,3 @@ type = ProcessID(bus, 'type')
 cat = ProcessID(bus, 'cat')
 amb = ProcessID(attr, 'Ambience')
 casual = ProcessID(amb, 'casual')
-

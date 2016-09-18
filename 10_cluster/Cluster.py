@@ -1,4 +1,4 @@
-# David Richard Steinmetz
+# David Richard Steinmetz - davidsteinmetz@gmail.com
 # Gregory Domingo
 # NYCDSA Capstone Project
 
@@ -58,17 +58,16 @@ def get_businesses_on_map(bounding_box, search_params):
 
 # Load clusters created from Yelp challenge dataset
 # http://stackoverflow.com/questions/10592605/save-classifier-to-disk-in-scikit-learn
-def load_model(file_name):
-    # from sklearn import KNeighborsClassifier  # do we need this?
+def load_pickle(file_name):
     import cPickle
-    with open(file_name, 'rb') as fid:
+    with open(file_name, 'r') as fid:
         return cPickle.load(fid)
 
 
 # Assign restaurants on map to a cluster
 def get_map_clusters(business_data):
     # from sklearn import KNeighborsClassifier  # do we need this?
-    knn = load_model('knn_model.pkl')
+    knn = load_pickle('knn_model.pkl')
     return knn.predict(business_data)
 
 
@@ -78,10 +77,10 @@ def cluster_rating_sort(business_data):
 
 
 # Extract clusters from top model recommendations
-def get_model_clusters(model_recs):
+def get_model_clusters(model_recs, num_clust):
     unique = model_recs['cluster'].drop_duplicates()
-    if len(unique) >= 3:
-        clusters = unique[0:3]
+    if len(unique) >= num_clust:
+        clusters = unique[0:num_clust]
     else:
         clusters = unique[0:len(unique)]
     return clusters
@@ -93,3 +92,23 @@ def gen_map_recs(sdata, clusters):
     reduced = sdata[filter_by]                      # filter dataset
     return reduced.groupby('cluster').head(2)       # extract first two business per cluster
     # return sdata
+
+
+# CREATE PREDICT FUNCTION FOR DBS
+def dbscan_predict(centroids, new_resto):
+    import numpy as np
+
+    data = new_resto.values
+    ans = np.arange(data.shape[0])
+    X = centroids.values
+    for i in range(data.shape[0]):
+        dist = np.sum((X - data[i, :].reshape(1, -1)) ** 2, axis=1)
+        cluster_id = np.argmin(dist)
+        ans[i] = cluster_id
+    return (ans)
+
+### MAKE TEST RECORD FOR PREDICT DBS CLUSTER (no predict function for dbs)
+# new_resto = gl.SFrame({'stars': [4.5, 5, 4],
+#                   'PriceRange': [1,1,1],
+#                   'LogReviewCnt': [1.38629436,2.9957322,3.04452243772]})
+# dbscan_predict(Centroids,new_resto.to_dataframe())

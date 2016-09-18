@@ -25,6 +25,9 @@ search_params = {
 }
 
 def supervisor(user_id, num_rec, bounding_box, search_params):
+    # --- Define constants
+    num_clust = 5  # Number of clusters from the recommended restaurants to take for prediction
+
     # --- Test structures
     np.random.seed(26) #!!!!!!!!!!!!!!
     test_biz_cluster = pd.Series(np.random.randint(1, 25, num_rec * len(user_id))) #!!!!!!!!!!!!!!
@@ -34,21 +37,31 @@ def supervisor(user_id, num_rec, bounding_box, search_params):
     # --- Collaborative filtering recommendations (1 + 2)
     bus_types = search_params['term'].split(',')        # Create list of business types
     # model_recs = test_model_recs                      # Get model recommendations
-    model_recs = gl_model(user_id, num_rec, bus_types)  # Get model recos
-    # model_clusters = get_model_clusters(model_recs)   # Get clusters for model recs #!!!!!!!!!!!!!!
-    model_clusters = test_model_clusters  # Get clusters for model recs #!!!!!!!!!!!!!!
+    model_recs = gl_model(user_id, num_rec, bus_types)  # Get model recs
+    # print 'model_recs\n', type(model_recs)
+    # print model_recs
+
+    # Assign clusters to graphlab model recs
+    # biz_cluster = load_pickle('biz4.pkl')  # Load business data
+    # resto = pd.merge(model_recs, biz_cluster, on=['business_id'])  # Merge to get data to predict
+    # Centroids = load_pickle('Centroids.pkl')  # Load centroids from DBS model
+    # old_resto = dbscan_predict(Centroids, resto[['stars','PriceRange','LogReviewCnt']])  # Assign clusters (classify)
+    # clust_to_rec_from = get_unique_model_clusters(old_resto, num_clust)   # Get unique clusters #!!!!!!!!!!!!!!
+    # print 'clust_to_rec_from\n', clust_to_rec_from
+    clust_to_rec_from = test_model_clusters  # Get clusters for model recs #!!!!!!!!!!!!!!
 
     # --- Classify and sort (3 + 4 + 5)
     biz = get_businesses_on_map(bounding_box, search_params)  # Get businesses on map
-    # biz['cluster'] = get_map_clusters(biz)  # Classify biz on map to clusters (DBS) #!!!!!!!!!!!!!!
+    # biz['cluster'] = assign_map_clusters(biz)  # Classify biz on map to clusters (DBS) #!!!!!!!!!!!!!!
+    # print 'biz[cluster]\n', biz['cluster']
     biz['cluster'] = test_biz_cluster  # Classify biz on map to clusters (DBS) #!!!!!!!!!!!!!!
     sorted_biz = cluster_rating_sort(biz)  # Sort biz by cluster and rating
 
     # --- Generate recommendations in new locale (6)
-    map_recs = gen_map_recs(sorted_biz, model_clusters)  # Generate recs from biz on map
+    map_recs = gen_map_recs(sorted_biz, clust_to_rec_from)  # Generate recs from biz on map
     js_map_recs = map_recs.to_json()
     return js_map_recs
 
 
 # Test supervisor function
-#supervisor(user_id, num_rec, bounding_box, search_params)
+supervisor(user_id, num_rec, bounding_box, search_params)
