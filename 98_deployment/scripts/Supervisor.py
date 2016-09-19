@@ -59,6 +59,7 @@ def supervisor(user_id, num_rec, bounding_box, search_params):
 
     # --- Generate recommendations in new locale (6)
     map_recs = gen_map_recs(sorted_biz, clust_to_rec_from)  # Generate recs from biz on map
+    print map_recs.iloc[1]
     js_map_recs = map_recs.to_json()
     return js_map_recs
 

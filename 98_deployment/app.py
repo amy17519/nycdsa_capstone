@@ -1,10 +1,13 @@
 from flask import Flask, render_template, redirect, request, url_for
 import pandas as pd
+import random as rd
 import json
 from scripts.Supervisor import *
 # from flask_googlemaps import GoogleMaps,Map
 
 user_ids = pd.read_csv('user_id.csv')
+user1_row_num = rd.randint(0, 552339)
+user2_row_num = rd.randint(0, 552339)
 
 app = Flask(__name__)
 
@@ -26,12 +29,11 @@ def mapview():
 
 @app.route('/model', methods=['GET','POST'])
 def getResult():
-    user1_row_num = int(request.form.get('user1'))
-    user2_row_num = int(request.form.get('user2'))
+    # user1_row_num = int(request.form.get('user1'))
+    # user2_row_num = int(request.form.get('user2'))
     user1_id = user_ids['user_id'][user1_row_num]
     user2_id = user_ids['user_id'][user2_row_num]
     user_id = [user1_id, user2_id]
-    print user_id
 
     sw_latitude = request.form.get('sw_latitude')
     sw_longitude = request.form.get('sw_longitude')
@@ -43,11 +45,8 @@ def getResult():
          'ne_latitude': ne_latitude,
          'ne_longitude': ne_longitude
      }
-    print bounding_box
 
     FoodType = str(request.form.get('FoodType'))
-    print type(FoodType)
-    print FoodType
     search_params = {
         'term': FoodType,
         'lang': 'en'
@@ -55,9 +54,6 @@ def getResult():
     print search_params
 
     result = supervisor(user_id,20,bounding_box,search_params)
-    print result
-    with open('data.txt', 'w') as outfile:
-        json.dump(result, outfile)
     return result
 
 
