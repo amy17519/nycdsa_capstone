@@ -52,6 +52,7 @@
     #cuisinelist {
         opacity:0.8;
         box-shadow: 0 10px 10px -10px #000000;
+        padding:8px;
     }
 
     #restaurants {
@@ -75,6 +76,10 @@
         width:380px;
         overflow-y: scroll;
         max-height: 300px;
+    }
+    #restaurantslist li{
+        height:100px !important;
+        padding-right:32px;
     }
     h6 {
     display: block;
@@ -183,7 +188,7 @@
 
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox7">
-                    <input class="mdl-checkbox__input" id="checkbox7" type="checkbox">
+                    <input checked class="mdl-checkbox__input" id="checkbox7" type="checkbox">
                     <span class="mdl-checkbox__label" id="checkboxlabel7">Chinese</span>
                 </label></td>
 
@@ -193,7 +198,7 @@
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox" for="checkbox1">
-                    <input checked class="mdl-checkbox__input" id="checkbox1" type="checkbox">
+                    <input class="mdl-checkbox__input" id="checkbox1" type="checkbox">
                     <span class= "mdl-checkbox__label" id="checkboxlabel1">Pizza</span>
                 </label></td>
 
@@ -209,7 +214,7 @@
                 </label></td>
 
                 <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox6">
-                    <input class="mdl-checkbox__input" id="checkbox6" type="checkbox">
+                    <input checked class="mdl-checkbox__input" id="checkbox6" type="checkbox">
                     <span class="mdl-checkbox__label" id="checkboxlabel6">Burgers</span>
                 </label></td>
 
@@ -220,7 +225,7 @@
             </tr>
             <tr>
                 <td><label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox3">
-                    <input checked class="mdl-checkbox__input" id="checkbox3" type="checkbox">
+                    <input class="mdl-checkbox__input" id="checkbox3" type="checkbox">
                     <span class="mdl-checkbox__label" id="checkboxlabel3">American (New)</span>
                 </label></td>
 
@@ -448,7 +453,7 @@
                         zoom: 12,
                         styles: tem
                     });
-                    setMarkers(map);
+                    <!--setMarkers(map);-->
                     google.maps.event.addListener(map, 'idle', function(event) {
                         bounds = map.getBounds();
                         console.log(bounds);})
@@ -461,7 +466,12 @@
       var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var labelIndex = 0;
 
+
+      var markers = [];
+
      function setMarkers(map) {
+        deleteMarkers();
+
         for (var i = 0; i < restaurants.length; i++) {
           var restaurant = restaurants[i];
           var marker = new google.maps.Marker({
@@ -471,7 +481,31 @@
             label: labels[labelIndex++ % labels.length]
           });
           addInfoWindow(marker, restaurants[i][5].concat(" | " + '<a href="' + restaurants[i][8] + '">  Yelp It!</a><br>'+restaurants[i][2][0] + " | " + restaurants[i][3] + "<br> Rating: " + restaurants[i][6] + " | Price: " + restaurants[i][7]));
+          markers.push(marker);
         }
+      }
+
+      function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
+
+      // Removes the markers from the map, but keeps them in the array.
+      function clearMarkers() {
+        setMapOnAll(null);
+      }
+
+      // Shows any markers currently in the array.
+      function showMarkers() {
+        setMapOnAll(map);
+      }
+
+      // Deletes all markers in the array by removing references to them.
+      function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+        labelIndex = 0;
       }
 
       function addInfoWindow(marker, info) {
@@ -483,7 +517,10 @@
             });
         }
 
-
+           <!--function deleteMarkers() {-->
+        <!--clearMarkers();-->
+        <!--markers = [];-->
+      <!--}-->
 
     </script>
     <script async defer
@@ -595,7 +632,7 @@ $(function() {
                     document.getElementById(tempName).innerHTML = restaurants[recIndex][5].concat(" | " + '<a href="' + restaurants[recIndex][8] + '">Yelp It!</a>') ;
                     document.getElementById(tempContent).innerHTML = restaurants[recIndex][2][0].concat(" | " + restaurants[recIndex][3] + "<br> Rating: " + restaurants[recIndex][6] + " | Price: " + restaurants[recIndex][7]);
                 }
-                initMap();
+                setMarkers(map);
             },
             error: function() {
                 console.log("notworking");
